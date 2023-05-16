@@ -42,7 +42,7 @@
     "vee-validate": "^4.5.11",
     "video.js": "^7.20.3",
     "vite": "^4.0.4",
-    "vue": "^3.3.2",
+    "vue": "^3.2.13",
     "vue-chartjs": "^4.1.1",
     "vue-cleave-component": "^3.0.1",
     "vue-flatpickr-component": "^9",
