@@ -1,8 +1,3 @@
-import userImg from "@/assets/images/all-img/user.png";
-import user2Img from "@/assets/images/all-img/user2.png";
-import user3Img from "@/assets/images/all-img/user3.png";
-import user4Img from "@/assets/images/all-img/user4.png";
-
 export const menuItems = [
   {
     isHeadr: true,
@@ -621,44 +616,6 @@ export const trackingParcel = [
   },
 ];
 
-export const TodoList = [
-  {
-    id: 1,
-    image: userImg,
-    title: "Amet minim mollit non deserunt ullam.",
-    isDone: false,
-  },
-  {
-    id: 2,
-    image: user2Img,
-    title: "Amet minim mollit non deserunt ullam.",
-    isDone: false,
-  },
-  {
-    id: 3,
-    image: user3Img,
-    title: "Amet minim mollit non deserunt ullam.",
-    isDone: false,
-  },
-  {
-    id: 4,
-    image: user4Img,
-    title: "Amet minim mollit non deserunt ullam.",
-    isDone: false,
-  },
-  {
-    id: 5,
-    image: user2Img,
-    title: "Amet minim mollit non deserunt ullam.",
-    isDone: false,
-  },
-  {
-    id: 6,
-    image: user3Img,
-    title: "Amet minim mollit non deserunt ullam.",
-    isDone: false,
-  },
-];
 
 //  todo fillter
 export const fillters = [
@@ -747,35 +704,3 @@ export const projectCatagory = [
   },
 ];
 
-import avatar1 from "@/assets/images/avatar/av-1.svg";
-import avatar2 from "@/assets/images/avatar/av-2.svg";
-import avatar3 from "@/assets/images/avatar/av-3.svg";
-import avatar4 from "@/assets/images/avatar/av-4.svg";
-import avatar5 from "@/assets/images/avatar/av-5.svg";
-import avatar6 from "@/assets/images/avatar/av-6.svg";
-export const assignOption = [
-  {
-    title: "Mahedi Amin",
-    image: avatar1,
-  },
-  {
-    title: "Sovo Haldar",
-    image: avatar2,
-  },
-  {
-    title: "Rakibul Islam",
-    image: avatar3,
-  },
-  {
-    title: "Moni Haldar",
-    image: avatar4,
-  },
-  {
-    title: "Pritom Miha",
-    image: avatar5,
-  },
-  {
-    title: "Simanta Kika",
-    image: avatar6,
-  },
-];
