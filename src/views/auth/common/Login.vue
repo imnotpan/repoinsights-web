@@ -25,18 +25,15 @@ import { ref } from 'vue';
 const toast = useToast();
 const router = useRouter();
 
-const clientId = ref('')
+const loginUrl = ref('')
 
 const signInWithGitHub = async () => {
-
-  const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId.value}&scope=user,user:email`; 
-  window.location.href = githubAuthUrl;
+  window.location.href = loginUrl.value;
 }
 
 onMounted(async () => {
-  const response = await axios.get('http://localhost:8000/api/social/id')
-  clientId.value = response.data.client_id
-  console.log(clientId.value)
+  const response = await axios.get('http://localhost:8000/api/social/login/github')
+  loginUrl.value = response.data.auth_url
 });
 
 

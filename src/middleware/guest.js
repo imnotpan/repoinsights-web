@@ -1,14 +1,11 @@
 import { useUserStore } from '@/store/user'; // Importa useUserStore
 
 export default function auth({ next }) {
-  console.log("guest middleware");
-
   const userStore = useUserStore(); // Crea una instancia de userStore
 
   if (userStore.token) {
     console.log("activeUser", userStore.name);
     return next('app');
   }
-  console.log("no activeUser");
   return next();
 }

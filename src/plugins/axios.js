@@ -8,9 +8,8 @@ const axiosClient = axios.create({
 
 axiosClient.interceptors.request.use((config) => {
   const userStore = useUserStore();
-  // Configura la cabecera Authorization solo si hay un token disponible en userStore
   if (userStore.token) {
-    config.headers.Authorization = `Token ${userStore.token}`;
+    config.headers.Authorization = `Bearer ${userStore.token}`;
   }
   return config;
 });
