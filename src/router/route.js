@@ -26,6 +26,9 @@ const routes = [
     component: () => import("@/Layout/index.vue"),
     meta: {
       middleware: [auth],
+      groupParent: "app",
+
+
     },
     children: [
       {
@@ -56,6 +59,11 @@ const routes = [
         meta: {
           hide: true,
         },
+      },
+      {
+        path: "add-project",
+        name: "Agregar proyecto personal",
+        component: () => import("@/views/home/projects.vue")
       }
     ],
   },

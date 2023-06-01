@@ -1,20 +1,11 @@
 <template>
-  <div
-    class="fromGroup relative"
-    :class="`${error ? 'has-error' : ''}  ${horizontal ? 'flex' : ''}  ${
-      validate ? 'is-valid' : ''
-    } `"
-  >
-    <label
-      v-if="label"
-      :class="`${classLabel} inline-block input-label `"
-      :for="name"
-    >
-      {{ label }}</label
-    >
+  <div class="fromGroup relative" :class="`${error ? 'has-error' : ''}  ${horizontal ? 'flex' : ''}  ${validate ? 'is-valid' : ''
+    } `">
+    <label v-if="label" :class="`${classLabel} inline-block input-label `" :for="name">
+      {{ title }}</label>
     <div class="relative">
       <div v-if="!$slots.default">
-        <vSelect
+        <vSelect 
           :name="name"
           :error="error"
           :id="name"
@@ -23,7 +14,11 @@
           :validate="validate"
           :multiple="multiple"
           :options="options"
-        >
+          :label="label"
+          :searchable="searchable"
+          :close-on-select="closeOnSelect"
+          :value="parentValue"
+          >
         </vSelect>
       </div>
       <slot></slot>
@@ -38,31 +33,15 @@
       </div>
     </div>
 
-    <span
-      v-if="error"
-      class="mt-2"
-      :class="
-        msgTooltip
-          ? ' inline-block bg-danger-500 text-white text-[10px] px-2 py-1 rounded'
-          : ' text-danger-500 block text-sm'
-      "
-      >{{ error }}</span
-    >
-    <span
-      v-if="validate"
-      class="mt-2"
-      :class="
-        msgTooltip
-          ? ' inline-block bg-success-500 text-white text-[10px] px-2 py-1 rounded'
-          : ' text-success-500 block text-sm'
-      "
-      >{{ validate }}</span
-    >
-    <span
-      class="block text-secondary-500 font-light leading-4 text-xs mt-2"
-      v-if="description"
-      >{{ description }}</span
-    >
+    <span v-if="error" class="mt-2" :class="msgTooltip
+      ? ' inline-block bg-danger-500 text-white text-[10px] px-2 py-1 rounded'
+      : ' text-danger-500 block text-sm'
+      ">{{ error }}</span>
+    <span v-if="validate" class="mt-2" :class="msgTooltip
+      ? ' inline-block bg-success-500 text-white text-[10px] px-2 py-1 rounded'
+      : ' text-success-500 block text-sm'
+      ">{{ validate }}</span>
+    <span class="block text-secondary-500 font-light leading-4 text-xs mt-2" v-if="description">{{ description }}</span>
   </div>
 </template>
 <script>
@@ -93,10 +72,6 @@ export default {
 
     name: {
       type: String,
-    },
-    modelValue: {
-      // type: String || Array,
-      default: "",
     },
     error: {
       type: String,
@@ -133,9 +108,27 @@ export default {
     options: {
       type: Array,
     },
+    searchable: {
+      type: Boolean,
+      default: true
+    },
+
+  title: {
+    type: String,
+    default: ""
+  },
+  closeOnSelect: {
+      type: Boolean,
+      default: true,
+    },
+  parentValue: {
+    type: Array,
+    default: () => [],
+  },
   },
 };
 </script>
+
 <style lang="scss">
 .fromGroup {
   .vs__dropdown-toggle {
