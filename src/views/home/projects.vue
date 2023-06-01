@@ -9,7 +9,7 @@
                 <div class="relative" v-if="tokens.length > 0">
                     <vue-good-table :columns="tokensColumns" :rows="tokens" />
                     <div class="text-center mt-10">
-                        <p class="font-light">No has agregado tokens personales...</p>
+                        <!-- <p class="font-light">No has agregado tokens personales...</p> -->
                         <button class="btn-outline-warning px-2 py-3 rounded-sm" @click="toggleModal">Agregar token personal</button>
                     </div>
                 </div>
@@ -25,7 +25,7 @@
                     <ul>
                         <li v-for="repo in repositories" :key="repo.id" @click="selectRepo(repo)">
                             <div
-                                class="flex items-center my-2 cursor-pointer hover:bg-gray-100 p-3 rounded-md transition-colors duration-200">
+                                class="flex items-center my-2 cursor-pointer hover:bg-gray-100 p-3 rounded-md transition-colors duration-200 border-b-2">
                                 <div class="flex items-center flex-1">
                                     <div class="hover:!text-red-400">
                                         <a :href="repo.url" target="_blank">
@@ -35,8 +35,8 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <Icon v-if="repo.added" icon="heroicons-outline:check" />
-                                    <Icon v-else-if="!repo.loading" icon="heroicons-outline:chevron-right" class="w-12" />
+                                    <Badge v-if="repo.added && repo.loading === false" label="Agregado" badgeClass="bg-green-500 text-white" />
+                                    <Badge v-else-if="!repo.added && repo.loading === false" label="Agregar" badgeClass="bg-blue-500 text-white"  />
                                     <SimpleLoader v-else />
                                 </div>
                             </div>
@@ -83,8 +83,7 @@ import { useToast } from 'vue-toastification';
 import Card from "@/components/Card"
 import axiosClient from "@/plugins/axios";
 import Modal from "@/components/Modal";
-
-// 
+import Badge from "@/components/Badge"; 
 
 
 const userStore = useUserStore();
@@ -121,13 +120,21 @@ const tokensColumns = [
 ]
 
 const selectRepo = (repo) => {
-    if (repo.loading === false) {
+    if (repo.loading === false && repo.added === false) {
         repo.loading = !repo.loading;
-        setTimeout(() => {
+        axiosClient.post("api/github/projects/add",{
+            id: repo.id,
+            url: repo.url,
+            name: repo.name
+        }).then((response) => {
             repo.added = true
             repo.loading = false
             toast.success(`${repo.name} agregado con éxito!`)
-        }, 5000)
+        }).catch((error) => {
+            console.log(error)
+            repo.loading = false
+            toast.error(`Error al agregar ${repo.name}`)
+        })
     }
 
 }
@@ -138,8 +145,21 @@ const { handleSubmit, values } = useForm({
 
 const { value: token, errorMessage: tokenError } = useField("token");
 
-const onSubmit = handleSubmit(() => {
-    console.warn(values.token);
+const onSubmit = handleSubmit(async () => {
+    axiosClient.post("api/github/tokens/add", {
+        token: token.value
+    }).then((response) => {
+        tokens.value.push(response.data.data)
+        toast.success("Token agregado con éxito!")
+        show.value = false
+    }).catch((error) => {
+        console.log(error)
+        toast.error("Error al agregar token")
+    }).finally(() => {
+        token.value = ""
+        show.value = false
+    })
+
 });
 
 
@@ -177,7 +197,7 @@ const getUserData = (async () => {
 })
 
 const getTokensData = (async () => {
-    const { data } = await axiosClient.get("api/social/github/tokens")
+    const { data } = await axiosClient.get("api/github/tokens")
     tokens.value = data.data
     console.log(tokens.value)
 })
