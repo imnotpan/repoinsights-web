@@ -36,9 +36,11 @@ const signInWithGitHub = async () => {
 onMounted(async () => {
   try {
         const response = await axiosClient.get('/api/social/login/github/')
+        console.log(response.data.auth_url)
         loginUrl.value = response.data.auth_url
     }
     catch (error) {
+        console.log(error)
         toast.error('Ha ocurrido un error en la carga, por favor intenta más tarde');
     }
 });
