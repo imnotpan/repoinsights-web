@@ -11,6 +11,15 @@ export default defineConfig({
       dirs: ["src/assets/images"],
     }),
   ],
+  server: {
+    host: '0.0.0.0',
+    port: 5173,
+    usePolling: true,
+  },
+  preview: {
+    port: 5173,
+  },
+  
   resolve: {
     extensions: [".mjs", ".js", ".ts", ".jsx", ".tsx", ".json", ".vue", ".css"],
     alias: {
@@ -18,6 +27,6 @@ export default defineConfig({
     },
   },
   build: {
-    chunkSizeWarningLimit: 1500, // Increase the limit to 1000 kB
+    chunkSizeWarningLimit: 1500,
   },
 });
