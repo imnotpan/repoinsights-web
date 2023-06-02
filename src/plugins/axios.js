@@ -4,8 +4,7 @@ import { useUserStore } from '@/store/user';
 
 const axiosClient = axios.create({
   // use .env api_url 
-  baseURL:  `${import.meta.env.API_URL}:${import.meta.env.API_PORT}`,
-  //baseURL: 'http://localhost:8000',
+  baseURL:  `http://${import.meta.env.VITE_API_URL}:${import.meta.env.VITE_API_PORT}`,
 });
 
 axiosClient.interceptors.request.use((config) => {
@@ -21,10 +20,15 @@ axiosClient.interceptors.response.use(
     return response;
   },
   (error) => {
+    console.log(error);
     if (error.response.status === 401) {
       const userStore = useUserStore();
       userStore.setToken(null);
       router.push({ name: 'login' });
+    }
+    else if (error.response.status === 403) {
+      console.log('TODO');
+      router.push({ name: '403' });
     }
     throw error;
   },
