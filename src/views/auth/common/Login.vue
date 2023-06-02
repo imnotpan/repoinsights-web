@@ -40,7 +40,6 @@ onMounted(async () => {
     }
     catch (error) {
         toast.error('Ha ocurrido un error en la carga, por favor intenta más tarde');
-        serverError.value = true
     }
 });
 
