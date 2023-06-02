@@ -3,7 +3,9 @@ import router from '../router/index.js';
 import { useUserStore } from '@/store/user';
 
 const axiosClient = axios.create({
-  baseURL: 'http://localhost:8000',
+  // use .env api_url 
+  baseURL:  `${import.meta.env.API_URL}:${import.meta.env.API_PORT}`,
+  //baseURL: 'http://localhost:8000',
 });
 
 axiosClient.interceptors.request.use((config) => {
