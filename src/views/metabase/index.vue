@@ -40,6 +40,6 @@ const resendEmail = () => {
 
 
 const redirect = () => {
-    window.open("http://localhost:8080/", "_blank");
+    window.open(`http://${import.meta.env.API_URL}:8080/`, "_blank");
 };
 </script>

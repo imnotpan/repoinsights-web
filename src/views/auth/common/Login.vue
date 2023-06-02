@@ -20,6 +20,8 @@ import { useToast } from 'vue-toastification';
 import axios from 'axios'
 import { onMounted } from 'vue';
 import { ref } from 'vue';
+import axiosClient from '@/plugins/axios';
+
 
 
 const toast = useToast();
@@ -32,8 +34,14 @@ const signInWithGitHub = async () => {
 }
 
 onMounted(async () => {
-  const response = await axios.get('http://localhost:8000/api/social/login/github')
-  loginUrl.value = response.data.auth_url
+  try {
+        const response = await axiosClient.get('/api/social/login/github/')
+        loginUrl.value = response.data.auth_url
+    }
+    catch (error) {
+        toast.error('Ha ocurrido un error en la carga, por favor intenta más tarde');
+        serverError.value = true
+    }
 });
 
 
