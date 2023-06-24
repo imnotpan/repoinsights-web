@@ -1,6 +1,6 @@
 <template>
   <Dropdown classMenuItems=" w-[180px] top-[58px] ">
-    <div class="flex items-center">
+    <div class="flex items-center gap-2">
       <div class="flex-1 ltr:mr-[10px] rtl:ml-[10px]">
         <div class="lg:h-8 lg:w-8 h-7 w-7 rounded-full">
           <img
