@@ -36,7 +36,7 @@
     <div class="grid grid-cols-12 gap-10">
         <Card className="col-span-3" bodyClass="p-2 relative">
             <p class="font-medium py-3 border-b">Filtros</p>
-            <Filter filterName="Lenguajes" :options="langOptions" />
+            <Filter filterName="Lenguajes" :options="langOptions" selectionMode="multiple" />
             <Filter filterName="Estrellas" :options="starsOptions" />
             <Filter filterName="Commits" :options="commitsOptions" />
         </Card>
@@ -95,17 +95,10 @@ import RatingData from "@/components/Explore/RatingData";
 import Filter from "@/components/Explore/Filter";
 import Icon from "@/components/Icon";
 
+import axiosClient from "@/plugins/axios";
 
-const langOptions = [
-    {
-        name: "Python",
-        count: 1000
-    },
-    {
-        name: "Javascript",
-        count: 231
-    }
-]
+
+const langOptions = ref([])
 
 const starsOptions = [
     {
@@ -128,6 +121,13 @@ const commitsOptions = [
         count: 231
     }
 ]
+
+onMounted(async() => {
+    const {data} = await axiosClient.get("/api/repoinsights/projects/langs")
+    langOptions.value = data.data
+    
+});
+
 
 </script>
   
