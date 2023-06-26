@@ -1,7 +1,7 @@
 <template>
   <div class="py-1">
     <div class="pb-1 pt-4">
-      <span class="font-medium text-xs">{{ filterName }}</span>
+      <span class="font-medium text-xs">{{ filterData.title }}</span>
     </div>
     <div class="options">
       <button
@@ -20,18 +20,15 @@
 <script setup>
 import { defineProps, ref, onMounted } from 'vue';
 
+const emit = defineEmits(['filterClicked']);
 const props = defineProps({
-  filterName: {
-    type: String,
+  filterData: {
+    type: Object,
     required: true
   },
   options: {
     type: Array,
     required: true
-  },
-  selectedOptions: {
-    type: [String, Array],
-    default: () => []
   },
   selectionMode: {
     type: String,
@@ -42,7 +39,7 @@ const props = defineProps({
   }
 });
 
-const selectedOptions = ref(props.selectedOptions);
+const selectedOptions = ref([]);
 
 const isOptionSelected = (option) => {
   if (props.selectionMode === 'single') {
@@ -68,10 +65,11 @@ const toggleOption = (option) => {
   }
 
   updateUrlParams();
+  emit('filterClicked');
 };
 
 const updateUrlParams = () => {
-  const filter = props.filterName;
+  const filter = props.filterData.key
   const searchParams = new URLSearchParams(window.location.search);
 
   if (props.selectionMode === 'single') {
@@ -95,7 +93,7 @@ const updateUrlParams = () => {
 };
 
 onMounted(() => {
-  const filter = props.filterName;
+  const filter = props.filterData.key;
   const searchParams = new URLSearchParams(window.location.search);
   const selectedOptionsFromUrl = searchParams.get(filter);
 
