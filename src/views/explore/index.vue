@@ -134,8 +134,7 @@ const updateUserProjects = async (project) => {
 onMounted(async () => {
     const {data: dataLangs} = await getFilter("langs")
     langOptions.value = dataLangs
-    const {data: dataUser} = await getFilter("user")
-    langOptions.value = dataUser
+    // const {data: dataUser} = await getFilter("users")
     const params = getUrlParams()
     await getProjects(params)
 
