@@ -6,7 +6,7 @@
     <div class="options">
       <button
         v-for="option in options"
-        :key="option.id"
+        :key="option.name"
         :class="['opt', isOptionSelected(option) ? 'selected' : '']"
         @click="toggleOption(option)"
       >
@@ -50,6 +50,7 @@ const isOptionSelected = (option) => {
 };
 
 const toggleOption = (option) => {
+  console.log('toggleOption', option);
   if (props.selectionMode === 'single') {
     if (selectedOptions.value === option.name) {
       selectedOptions.value = '';

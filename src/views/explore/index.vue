@@ -9,11 +9,11 @@
         <div class="sticky col-span-3 z-auto">
             <Card className="lg:!h-fit" bodyClass="p-2 relative">
                 <p class="font-medium py-3 border-b">Filtros</p>
-                <Filter :filterData="filters.selected" :options="selectedOptions"/>
+                <Filter :filterData="filters.selected" :options="selectedOptions" @filterClicked="handleFilterClicked" />
                 <Filter :filterData=filters.langs :options="langOptions" selectionMode="multiple"
                     @filterClicked="handleFilterClicked" />
-                <Filter :filterData=filters.stars :options="starsOptions" />
-                <Filter :filterData=filters.commits :options="commitsOptions" />
+                <Filter :filterData=filters.stars :options="starsOptions" @filterClicked="handleFilterClicked" />
+                <Filter :filterData=filters.commits :options="commitsOptions" selectionMode="multiple" @filterClicked="handleFilterClicked" />
             </Card>
         </div>
 
@@ -45,6 +45,7 @@ import { filters } from "@/constant/filter.js";
 
 
 const langOptions = ref([])
+const selectedOptions = ref([])
 const projects = ref({})
 let originalprojects = {}
 
@@ -68,13 +69,6 @@ const commitsOptions = [
     {
         name: "100-500",
         count: 231
-    }
-]
-
-const selectedOptions = [
-    {
-        name: "Seleccionados",
-        count: 10
     }
 ]
 
@@ -117,7 +111,8 @@ const getProjects = async (params) => {
 }
 
 const getFilter = async (filter) => {
-    const { data } = await axiosClient.get("/api/repoinsights/filters/" + filter)
+    console.log("getFilter", filter)
+    const { data } = await axiosClient.get("/api/repoinsights/filters/", { params: { filter } })
     return data
 }
 
@@ -132,12 +127,12 @@ const updateUserProjects = async (project) => {
 
 
 onMounted(async () => {
-    const {data: dataLangs} = await getFilter("langs")
+    const { data: dataLangs } = await getFilter(filters.langs.key)
     langOptions.value = dataLangs
-    // const {data: dataUser} = await getFilter("users")
+    const { data: dataSelected } = await getFilter(filters.selected.key)
+    selectedOptions.value = dataSelected
     const params = getUrlParams()
     await getProjects(params)
-
 });
 
 
