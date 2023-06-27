@@ -50,7 +50,6 @@ const isOptionSelected = (option) => {
 };
 
 const toggleOption = (option) => {
-  console.log('toggleOption', option);
   if (props.selectionMode === 'single') {
     if (selectedOptions.value === option.name) {
       selectedOptions.value = '';

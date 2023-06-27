@@ -9,11 +9,15 @@
         <div class="sticky col-span-3 z-auto">
             <Card className="lg:!h-fit" bodyClass="p-2 relative">
                 <p class="font-medium py-3 border-b">Filtros</p>
-                <Filter :filterData="filters.selected" :options="selectedOptions" @filterClicked="handleFilterClicked" />
-                <Filter :filterData=filters.langs :options="langOptions" selectionMode="multiple"
-                    @filterClicked="handleFilterClicked" />
-                <Filter :filterData=filters.stars :options="starsOptions" @filterClicked="handleFilterClicked" />
-                <Filter :filterData=filters.commits :options="commitsOptions" selectionMode="multiple" @filterClicked="handleFilterClicked" />
+                <div v-if="loading.filters">
+                    Loading...
+                </div>
+                <template v-else>
+                    <Filter :filterData="projectFilters.user.info" :options="projectFilters.user.data"
+                        @filterClicked="handleFilterClicked" />
+                    <Filter :filterData=projectFilters.langs.info :options="projectFilters.langs.data"
+                        selectionMode="multiple" @filterClicked="handleFilterClicked" />
+                </template>
             </Card>
         </div>
 
@@ -41,36 +45,14 @@ import FeaturedCard from "@/components/Explore/FeaturedCard.vue";
 import Filter from "@/components/Explore/Filter";
 
 import axiosClient from "@/plugins/axios";
-import { filters } from "@/constant/filter.js";
-
-
-const langOptions = ref([])
-const selectedOptions = ref([])
-const projects = ref({})
 let originalprojects = {}
 
 
-const starsOptions = [
-    {
-        name: "0-100",
-        count: 1000
-    },
-    {
-        name: "100-500",
-        count: 231
-    }
-]
-
-const commitsOptions = [
-    {
-        name: "0-100",
-        count: 1000
-    },
-    {
-        name: "100-500",
-        count: 231
-    }
-]
+const projectFilters = ref({})
+const projects = ref({})
+const loading = ref({
+    filters: true,
+})
 
 
 const filterProjects = (search) => {
@@ -102,6 +84,7 @@ const handleFilterClicked = async () => {
     console.log("filters changed")
     const params = getUrlParams()
     await getProjects(params)
+    await getFilters(params)
 }
 
 const getProjects = async (params) => {
@@ -110,28 +93,25 @@ const getProjects = async (params) => {
     originalprojects = { ...data }
 }
 
-const getFilter = async (filter) => {
-    console.log("getFilter", filter)
-    const { data } = await axiosClient.get("/api/repoinsights/filters/", { params: { filter } })
-    return data
+const getFilters = async (params) => {
+    const { data } = await axiosClient.get("/api/repoinsights/filters/", { params })
+    projectFilters.value = data
 }
 
 const updateUserProjects = async (project) => {
-    //console.log("updateUserProjects", project)
     const { data } = await axiosClient.post("/api/user/projects/", {
         project_id: project.id,
         action: project.selected ? "add" : "remove"
     })
-    console.log(data)
+    const params = getUrlParams()
+    await getFilters(params)
 }
 
 
 onMounted(async () => {
-    const { data: dataLangs } = await getFilter(filters.langs.key)
-    langOptions.value = dataLangs
-    const { data: dataSelected } = await getFilter(filters.selected.key)
-    selectedOptions.value = dataSelected
     const params = getUrlParams()
+    await getFilters(params)
+    loading.value.filters = false
     await getProjects(params)
 });
 
