@@ -8,15 +8,24 @@
     <div class="grid grid-cols-12 gap-10">
         <div class="sticky col-span-3 z-auto">
             <Card className="lg:!h-fit" bodyClass="p-2 relative">
-                <p class="font-medium py-3 border-b">Filtros</p>
-                <div v-if="loading.filters">
-                    Loading...
+                <div class="py-3 border-b flex justify-between mr-2">
+                    <p class="font-medium">Filtros</p>
+                    <!-- <div v-if="activeFilters" @click="cleanFilters"
+                        class="group border border-red-700 py-1 px-2 text-xs cursor-pointer transition-colors duration-200 ease-in-out hover:bg-red-50 rounded">
+                        <span class="text-red-700  transition-all duration-200 ease-in-out">Limpiar
+                            filtros</span>
+                    </div> -->
+                </div>
+                <div v-if="loading.filters" class="w-full m-auto">
+                    <Loader />
                 </div>
                 <template v-else>
                     <Filter :filterData="projectFilters.user.info" :options="projectFilters.user.data"
                         @filterClicked="handleFilterClicked" />
                     <Filter :filterData=projectFilters.langs.info :options="projectFilters.langs.data"
                         selectionMode="multiple" @filterClicked="handleFilterClicked" />
+                    <Filter :filterData=projectFilters.commit.info :options="projectFilters.commit.data"
+                        @filterClicked="handleFilterClicked" />
                 </template>
             </Card>
         </div>
@@ -39,6 +48,8 @@
 import { ref, onMounted } from "vue";
 
 import Card from "@/components/Card";
+import Loader from "@/components/Loader/simpleLoader.vue";
+
 import SearchBar from "@/components/Explore/SearchBar";
 import ProjectCard from "@/components/Explore/ProjectCard";
 import FeaturedCard from "@/components/Explore/FeaturedCard.vue";
@@ -47,7 +58,7 @@ import Filter from "@/components/Explore/Filter";
 import axiosClient from "@/plugins/axios";
 let originalprojects = {}
 
-
+const activeFilters = ref(false)
 const projectFilters = ref({})
 const projects = ref({})
 const loading = ref({
@@ -77,11 +88,16 @@ const getUrlParams = () => {
     for (const [key, value] of urlParams) {
         params[key] = value;
     }
+    if (Object.keys(params).length !== 0 && params.constructor === Object) {
+        activeFilters.value = true
+    }
+    else {
+        activeFilters.value = false
+    }
     return params;
-};
+}
 
 const handleFilterClicked = async () => {
-    console.log("filters changed")
     const params = getUrlParams()
     await getProjects(params)
     await getFilters(params)
@@ -95,6 +111,7 @@ const getProjects = async (params) => {
 
 const getFilters = async (params) => {
     const { data } = await axiosClient.get("/api/repoinsights/filters/", { params })
+    console.log(data)
     projectFilters.value = data
 }
 
@@ -107,12 +124,28 @@ const updateUserProjects = async (project) => {
     await getFilters(params)
 }
 
+// const cleanFilters = async () => {
+//     // clean filters from url
+//     const url = new URL(window.location.href);
+//     url.search = "";
+//     window.history.replaceState({}, "", url);
+//     await loadData()
+//     const filters = document.querySelectorAll(".opt");
+//     console.log(filters)
+//     filters.forEach((filter) => {
+//         filter.classList.remove("selected");
+//     });
+// }
 
-onMounted(async () => {
+const loadData = async () => {
     const params = getUrlParams()
     await getFilters(params)
     loading.value.filters = false
     await getProjects(params)
+}
+
+onMounted(async () => {
+    await loadData()
 });
 
 
