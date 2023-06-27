@@ -4,12 +4,8 @@
       <span class="font-medium text-xs">{{ filterData.title }}</span>
     </div>
     <div class="options">
-      <button
-        v-for="option in options"
-        :key="option.name"
-        :class="['opt', isOptionSelected(option) ? 'selected' : '']"
-        @click="toggleOption(option)"
-      >
+      <button v-for="option in options" :key="option.name" :class="['opt', isOptionSelected(option) ? 'selected' : '']"
+        @click="toggleOption(option)">
         <span>{{ option.name }}</span>
         <span>{{ option.count }}</span>
       </button>
@@ -73,7 +69,7 @@ const updateUrlParams = () => {
   const searchParams = new URLSearchParams(window.location.search);
 
   if (props.selectionMode === 'single') {
-    if (selectedOptions.value === '') {
+    if (selectedOptions.value.length === 0) {
       searchParams.delete(filter);
     } else {
       searchParams.set(filter, selectedOptions.value);
@@ -92,6 +88,12 @@ const updateUrlParams = () => {
   window.history.pushState(null, null, newUrl);
 };
 
+const cleanFilters = () => {
+  console.log('cleaning filters');
+  selectedOptions.value = [];
+  updateUrlParams();
+};
+
 onMounted(() => {
   const filter = props.filterData.key;
   const searchParams = new URLSearchParams(window.location.search);
@@ -103,6 +105,12 @@ onMounted(() => {
     selectedOptions.value = selectedOptionsFromUrl ? selectedOptionsFromUrl.split(',') : [];
   }
 });
+
+
+defineExpose({
+  cleanFilters
+})
+
 </script>
 
 <style scoped lang="scss">

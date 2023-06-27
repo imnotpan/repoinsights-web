@@ -10,21 +10,21 @@
             <Card className="lg:!h-fit" bodyClass="p-2 relative">
                 <div class="py-3 border-b flex justify-between mr-2">
                     <p class="font-medium">Filtros</p>
-                    <!-- <div v-if="activeFilters" @click="cleanFilters"
+                    <div v-if="activeFilters" @click="cleanFilters"
                         class="group border border-red-700 py-1 px-2 text-xs cursor-pointer transition-colors duration-200 ease-in-out hover:bg-red-50 rounded">
                         <span class="text-red-700  transition-all duration-200 ease-in-out">Limpiar
                             filtros</span>
-                    </div> -->
+                    </div>
                 </div>
                 <div v-if="loading.filters" class="w-full m-auto">
                     <Loader />
                 </div>
                 <template v-else>
-                    <Filter :filterData="projectFilters.user.info" :options="projectFilters.user.data"
+                    <Filter ref="userFilter" :filterData="projectFilters.user.info" :options="projectFilters.user.data"
                         @filterClicked="handleFilterClicked" />
-                    <Filter :filterData=projectFilters.langs.info :options="projectFilters.langs.data"
+                    <Filter ref="langFilter" :filterData=projectFilters.langs.info :options="projectFilters.langs.data"
                         selectionMode="multiple" @filterClicked="handleFilterClicked" />
-                    <Filter :filterData=projectFilters.commit.info :options="projectFilters.commit.data"
+                    <Filter ref="commitFilter" :filterData=projectFilters.commit.info :options="projectFilters.commit.data"
                         @filterClicked="handleFilterClicked" />
                 </template>
             </Card>
@@ -124,18 +124,18 @@ const updateUserProjects = async (project) => {
     await getFilters(params)
 }
 
-// const cleanFilters = async () => {
-//     // clean filters from url
-//     const url = new URL(window.location.href);
-//     url.search = "";
-//     window.history.replaceState({}, "", url);
-//     await loadData()
-//     const filters = document.querySelectorAll(".opt");
-//     console.log(filters)
-//     filters.forEach((filter) => {
-//         filter.classList.remove("selected");
-//     });
-// }
+
+const userFilter = ref(null);
+const langFilter = ref(null);
+const commitFilter = ref(null);
+
+const cleanFilters = async () => {
+    userFilter.value.cleanFilters();
+    langFilter.value.cleanFilters();
+    commitFilter.value.cleanFilters();
+    await loadData()
+};
+
 
 const loadData = async () => {
     const params = getUrlParams()
