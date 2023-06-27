@@ -32,12 +32,21 @@
         </div>
         <hr class="my-4" />
         <div class="flex gap-8">
-            <RatingData rating="D" text="Stars" value="90" :type=2 size="xs" />
+            <template v-for="rating in project.rating" :key="rating.id">
+                <RatingData
+                    :rating="rating.rating"
+                    :text="rating.name"
+                    :value="rating.value"
+                    :type=2
+                    size="xs"
+                />
+            </template>
+            <!-- <RatingData rating="D" text="Stars" value="90" :type=2 size="xs" />
             <RatingData rating="C" text="Stars" value="90" :type=2 size="xs" />
             <RatingData rating="A" text="Stars" value="90" :type=2 size="xs" />
             <RatingData rating="A" text="Stars" value="90" :type=2 size="xs" />
             <RatingData rating="F" text="Stars" value="90" :type=2 size="xs" />
-            <RatingData rating="A" text="Stars" value="90" :type=2 size="xs" />
+            <RatingData rating="A" text="Stars" value="90" :type=2 size="xs" /> -->
         </div>
     </Card>
 </template>

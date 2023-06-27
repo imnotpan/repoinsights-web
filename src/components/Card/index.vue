@@ -52,7 +52,6 @@
         
         ${imgBottom ? 'order-3 mt-6' : ' mb-6'}
         
-        
         `"
       >
         <img
@@ -63,7 +62,12 @@
         />
       </div>
 
-      <div :class="imgTop ? 'order-2' : ''" class="card-text h-full">
+      <div 
+        :class="`
+          ${imgTop ? 'order-2' : ''}
+
+          `" 
+        class="card-text h-full">
         <slot></slot>
       </div>
     </div>

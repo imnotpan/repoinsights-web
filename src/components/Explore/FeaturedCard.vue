@@ -10,22 +10,22 @@
         <span class="description my-2">1k lines - Python</span>
         <ul class="w-full">
             <li class="border-y py-2">
-                <RatingData rating="C" text="Stars" value="90" size="xs" />
+                <RatingData rating="C" text="Stars" :value=90 size="xs" />
             </li>
             <li class="border-y py-2">
-                <RatingData rating="D" text="Stars" value="322.2" size="xs" />
+                <RatingData rating="D" text="Stars" :value=322.2 size="xs" />
             </li>
             <li class="border-y py-2">
-                <RatingData rating="E" text="Stars" value="231" size="xs" />
+                <RatingData rating="E" text="Stars" :value=231 size="xs" />
             </li>
             <li class="border-y py-2">
-                <RatingData rating="A" text="Stars" value="10" size="xs" />
+                <RatingData rating="A" text="Stars" :value=10 size="xs" />
             </li>
             <li class="border-y py-2">
-                <RatingData rating="A" text="Stars" value="3432" size="xs" />
+                <RatingData rating="A" text="Stars" :value=3432 size="xs" />
             </li>
             <li class="py-2">
-                <RatingData rating="F" text="Stars" value="0.02" size="xs" />
+                <RatingData rating="F" text="Stars" :value=0.02 size="xs" />
             </li>
         </ul>
     </Card>

@@ -10,7 +10,7 @@
     <div v-else-if="type == 2" class="leading-none">
         <div class="flex gap-2">
             <Rating :rating="rating" :size=sizeClasses[size].circle :text=sizeClasses[size].circleText />
-            <span class="font-medium" :class="[sizeClasses[size].value]">{{ value }}</span>
+            <span class="font-medium" :class="[sizeClasses[size].value]">{{ roundValue(value) }}</span>
         </div>
         <span :class=[sizeClasses[size].text]>{{ text }}</span>
 
@@ -56,7 +56,7 @@ const props = defineProps({
         type: String
     },
     value: {
-        type: String,
+        type: Number,
         required: true
     },
     size: {
@@ -65,4 +65,10 @@ const props = defineProps({
     }
 }
 );
+
+const roundValue = (value) => {
+    return Math.round(value * 10) / 10
+}
+
+
 </script>

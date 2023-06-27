@@ -1,14 +1,14 @@
 <template>
-    <h1 class="my-8 text-2xl text-center">Proyectos destacados</h1>
+    <h1 class="mb-8 text-2xl text-center">Proyectos destacados</h1>
     <div class="featured grid grid-cols-12 gap-4 mb-10">
         <FeaturedCard />
         <FeaturedCard />
         <FeaturedCard />
     </div>
     <div class="grid grid-cols-12 gap-10">
-        <div class="sticky col-span-3 z-auto">
+        <div class="col-span-3 z-auto self-start top-20">
             <Card className="lg:!h-fit" bodyClass="p-2 relative">
-                <div class="py-3 border-b flex justify-between mr-2">
+                <div class="py-3 border-b flex justify-between mr-2 relative">
                     <p class="font-medium">Filtros</p>
                     <div v-if="activeFilters" @click="cleanFilters"
                         class="group border border-red-700 py-1 px-2 text-xs cursor-pointer transition-colors duration-200 ease-in-out hover:bg-red-50 rounded">
@@ -19,7 +19,7 @@
                 <div v-if="loading.filters" class="w-full m-auto">
                     <Loader />
                 </div>
-                <template v-else>
+                <template v-else class="">
                     <Filter ref="userFilter" :filterData="projectFilters.user.info" :options="projectFilters.user.data"
                         @filterClicked="handleFilterClicked" />
                     <Filter ref="langFilter" :filterData=projectFilters.langs.info :options="projectFilters.langs.data"
@@ -56,6 +56,10 @@ import FeaturedCard from "@/components/Explore/FeaturedCard.vue";
 import Filter from "@/components/Explore/Filter";
 
 import axiosClient from "@/plugins/axios";
+import { useToast } from 'vue-toastification';
+
+const toast = useToast();
+
 let originalprojects = {}
 
 const activeFilters = ref(false)
@@ -116,12 +120,19 @@ const getFilters = async (params) => {
 }
 
 const updateUserProjects = async (project) => {
-    const { data } = await axiosClient.post("/api/user/projects/", {
-        project_id: project.id,
-        action: project.selected ? "add" : "remove"
-    })
-    const params = getUrlParams()
-    await getFilters(params)
+    try {
+        axiosClient.post("/api/user/projects/", {
+            project_id: project.id,
+            action: project.selected ? "add" : "remove"
+        }).then(() => {
+            toast.success("Proyecto actualizado correctamente", { timeout: 1500 })
+        })
+        const params = getUrlParams()
+        await getFilters(params)
+    }
+    catch (error) {
+        toast.error("Ocurrió un error al actualizar los proyectos del usuario")
+    }
 }
 
 
