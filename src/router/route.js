@@ -66,7 +66,7 @@ const routes = [
         component: () => import("@/views/home/projects.vue")
       },
       {
-        path: "explore/projects",
+        path: "explore",
         name: "Explorar proyectos",
         component: () => import("@/views/explore/index.vue")
       },
