@@ -1,11 +1,11 @@
 <template>
     <h1 class="mb-8 text-2xl text-center">Proyectos destacados</h1>
-    <div class="featured grid grid-cols-12 gap-4 mb-10">
+    <div class="featured grid grid-cols-12 gap-4 pb-5">
         <FeaturedCard />
         <FeaturedCard />
         <FeaturedCard />
     </div>
-    <div class="grid grid-cols-12 gap-10">
+    <div class="grid grid-cols-12 gap-10 pt-5 border-t">
         <div class="col-span-3 z-auto self-start top-20">
 
             <Card className="lg:!h-fit min-h-screen" bodyClass="p-2 relative">

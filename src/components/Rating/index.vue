@@ -1,6 +1,8 @@
 <template>
   <div class="flex items-center justify-center rounded-full" :class="[ratingColors[rating].bg, size]">
-    <span class="leading-none" :class="[ratingColors[rating].text, text]">{{ rating }}</span>
+    <span class="leading-none" :class="[ratingColors[rating].text, text]">
+      {{ rating }}
+    </span>
   </div>
 </template>
   
@@ -42,7 +44,7 @@ const props = defineProps({
   },
   text: {
     type: String,
-  },
+  }
 });
 </script>
   

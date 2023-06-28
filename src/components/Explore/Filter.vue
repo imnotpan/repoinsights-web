@@ -118,7 +118,7 @@ defineExpose({
   button {
     border-radius: 0.375rem;
     padding: 0.2rem 0.5rem;
-    transition: all 0.2s ease-in-out;
+    transition: all 0.01s ease-in-out;
     border: 1px solid transparent;
     cursor: pointer;
 

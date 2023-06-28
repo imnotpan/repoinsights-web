@@ -39,6 +39,8 @@
                     :value="rating.value"
                     :type=2
                     size="xs"
+                    :measure="rating.measurement"
+                    :showValue=rating.show_value
                 />
             </template>
         </div>

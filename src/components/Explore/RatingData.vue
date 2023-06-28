@@ -7,12 +7,14 @@
         </div>
     </div>
 
-    <div v-else-if="type == 2" class="leading-none">
+    <div v-else-if="type == 2" class="leading-none text-center">
         <div class="flex gap-2 justify-center">
-            <Rating :rating="rating" :size=sizeClasses[size].circle :text=sizeClasses[size].circleText />
-            <span v-if="!hideValue" class="font-medium" :class="[sizeClasses[size].value]">{{ roundValue(value) }}</span>
+            <Rating :rating="rating" :size=sizeClasses[size].circle :text=sizeClasses[size].circleText :measure="measure" />
+            <span v-if="showValue" class="font-medium" :class="[sizeClasses[size].value]">{{ roundValue(value) }}<small>{{ measure }}</small></span>
         </div>
-        <span :class=[sizeClasses[size].text]>{{ text }}</span>
+        <span :class=[sizeClasses[size].text]>
+            {{ text }}
+        </span>
 
     </div>
 </template>
@@ -63,15 +65,23 @@ const props = defineProps({
         type: String,
         default: 'xl'
     },
-    hideValue: {
+    showValue: {
         type: Boolean,
         default: false
+    },
+    measure: {
+        type: String,
+        default: '',
+        required: false
+
     }
 }
 );
 
 const roundValue = (value) => {
     return Math.round(value * 10) / 10
+
+
 }
 
 
