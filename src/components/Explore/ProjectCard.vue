@@ -2,7 +2,7 @@
     <Card className="my-5 lg:!h-fit">
         <div class="flex mb-1 justify-between">
             <div class="flex gap-4 items-center">
-                <Icon :icon="selectedProject(project)" class="text-lg text-primary-500 cursor-pointer" @click="addSelectedProject(project)" />
+                <LikeStar :project="project" @starClicked="handleSelect" />
                 <a href="#">
                     <h4 class="text-primary-500 font-medium text-base flex gap-1">
                         <div class="underline font-normal">{{ project.owner_name }}</div>/<div class="underline ">{{
@@ -51,31 +51,14 @@
 
 import Card from "@/components/Card";
 import RatingData from "@/components/Explore/RatingData";
-import Icon from "@/components/Icon";
-
-const emit = defineEmits(['selectedProject'])
+import LikeStar from "./LikeStar.vue";
 
 
 const githubUrl = (project) => {
     return `https://www.github.com/${project.owner_name}/${project.name}`
 }
 
-const selectedProject = (project) => {
-    if (project.selected) {
-        return 'heroicons-solid:star'
-    }
-    return 'heroicons-outline:star'
-}
-
-const addSelectedProject = (project) => {
-    project.selected = !project.selected
-    emit('selectedProject', project)
-}
-
-const toLocalDate = (date) => {
-    const d = new Date(date);
-    return d.toLocaleDateString();
-}
+const emit = defineEmits(["selectedProject"])
 
 const props = defineProps({
     project: {
@@ -83,4 +66,15 @@ const props = defineProps({
         required: true
     }
 })
+
+const toLocalDate = (date) => {
+    const d = new Date(date);
+    return d.toLocaleDateString();
+}
+
+const handleSelect = (project) => {
+    console.log(project)
+    emit("selectedProject", project)
+}
+
 </script>

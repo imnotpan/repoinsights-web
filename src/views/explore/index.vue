@@ -1,13 +1,15 @@
 <template>
     <h1 class="mb-8 text-2xl text-center">Proyectos destacados</h1>
-    <div class="featured grid grid-cols-12 gap-4 pb-5">
-        <FeaturedCard />
-        <FeaturedCard />
-        <FeaturedCard />
+    <div class="featured grid grid-cols-12 gap-4 pb-5 lg:w-3/4 mx-auto">
+        <div v-if="loading.featured" v-for="index in 3" :key="index" class="col-span-4">
+            <SkeletonLoader :number=1 :vertical=true :height=226 />
+        </div>
+        <template v-else v-for="featuredProject in featuredProjects" :key="featuredProject.id">
+            <FeaturedCard :project=featuredProject @selectedProject="updateUserProjects" />
+        </template>
     </div>
     <div class="grid grid-cols-12 gap-10 pt-5 border-t">
         <div class="col-span-3 z-auto self-start top-20">
-
             <Card className="lg:!h-fit min-h-screen" bodyClass="p-2 relative">
                 <div class="py-3 border-b flex justify-between mr-2 relative">
                     <p class="font-medium">Filtros</p>
@@ -30,7 +32,6 @@
                 </template>
             </Card>
         </div>
-
         <div class="col-span-8">
             <div class="flex justify-between">
                 <SearchBar placeholder="Buscar proyectos..." @search="filterProjects" />
@@ -53,7 +54,6 @@
 import { ref, onMounted } from "vue";
 
 import Card from "@/components/Card";
-import Loader from "@/components/Loader/simpleLoader.vue";
 import SkeletonLoader from "@/components/Skeleton/index.vue";
 
 import SearchBar from "@/components/Explore/SearchBar";
@@ -71,9 +71,11 @@ let originalprojects = {}
 const activeFilters = ref(false)
 const projectFilters = ref({})
 const projects = ref({})
+const featuredProjects = ref([])
 const loading = ref({
     filters: true,
-    projects: true
+    projects: true,
+    featured: true
 })
 
 
@@ -123,14 +125,13 @@ const getProjects = async (params) => {
 const getFilters = async (params) => {
     loading.value.filters = true
     const { data } = await axiosClient.get("/api/repoinsights/filters/", { params })
-    console.log(data)
     projectFilters.value = data
     loading.value.filters = false
 }
 
 const updateUserProjects = async (project) => {
     try {
-        axiosClient.post("/api/user/projects/", {
+        await axiosClient.post("/api/user/projects/", {
             project_id: project.id,
             action: project.selected ? "add" : "remove"
         }).then(() => {
@@ -162,8 +163,15 @@ const loadData = async () => {
     await Promise.all([getFilters(params), getProjects(params)]);
 }
 
+const getFeaturedProjects = async () => {
+    loading.value.featured = true
+    const { data } = await axiosClient.get("/api/repoinsights/explore/featured/")
+    featuredProjects.value = data.projects
+    loading.value.featured = false
+}
+
 onMounted(async () => {
-    await loadData()
+    await Promise.all([loadData(), getFeaturedProjects()])
 });
 
 

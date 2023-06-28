@@ -1,5 +1,9 @@
 <template>
-  <span>
+  <span
+  :class="`
+    ${className}
+    `"
+  >
     <Icon :icon="icon" />
   </span>
 </template>
@@ -13,6 +17,10 @@ export default {
     icon: {
       type: String,
       default: 'heroicons-outline:home',
+    },
+    className: {
+      type: String,
+      default: '',
     },
   },
 };

@@ -2,7 +2,7 @@
     <div v-if="type == 1" class="flex w-full justify-between">
         <span :class=[sizeClasses[size].text]>{{ text }}</span>
         <div class="flex gap-2">
-            <span class="font-medium" :class="[sizeClasses[size].value]">{{ value }}</span>
+            <span class="font-medium" :class="[sizeClasses[size].value]">{{ roundValue(value) }}<small>{{ measure }}</small></span>
             <Rating :rating="rating" :size=sizeClasses[size].circle :text=sizeClasses[size].circleText />
         </div>
     </div>

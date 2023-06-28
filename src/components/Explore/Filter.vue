@@ -4,7 +4,7 @@
       <span class="font-medium text-xs">{{ filterData.title }}</span>
     </div>
     <div class="options">
-      <button v-for="option in options" :key="option.name" :class="['opt', isOptionSelected(option) ? 'selected' : '']"
+      <button v-for="option in options" :key="option.name" :class="['opt text-left', isOptionSelected(option) ? 'selected' : '']"
         @click="toggleOption(option)">
         <span>{{ option.name }}</span>
         <span>{{ option.count }}</span>
