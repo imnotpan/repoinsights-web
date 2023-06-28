@@ -17,7 +17,7 @@
         <div class="text-xs text-secondary-600">
             <p class="flex gap-2">
             <div>
-                <span><span class="font-medium">Última extracción:</span> {{ toLocalDate(project.last_extraction_date)
+                <span><span class="font-medium">Última actualización:</span> {{ toLocalDate(project.last_extraction_date)
                 }}</span>
             </div>
             |
@@ -41,12 +41,6 @@
                     size="xs"
                 />
             </template>
-            <!-- <RatingData rating="D" text="Stars" value="90" :type=2 size="xs" />
-            <RatingData rating="C" text="Stars" value="90" :type=2 size="xs" />
-            <RatingData rating="A" text="Stars" value="90" :type=2 size="xs" />
-            <RatingData rating="A" text="Stars" value="90" :type=2 size="xs" />
-            <RatingData rating="F" text="Stars" value="90" :type=2 size="xs" />
-            <RatingData rating="A" text="Stars" value="90" :type=2 size="xs" /> -->
         </div>
     </Card>
 </template>

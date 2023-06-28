@@ -8,9 +8,9 @@
     </div>
 
     <div v-else-if="type == 2" class="leading-none">
-        <div class="flex gap-2">
+        <div class="flex gap-2 justify-center">
             <Rating :rating="rating" :size=sizeClasses[size].circle :text=sizeClasses[size].circleText />
-            <span class="font-medium" :class="[sizeClasses[size].value]">{{ roundValue(value) }}</span>
+            <span v-if="!hideValue" class="font-medium" :class="[sizeClasses[size].value]">{{ roundValue(value) }}</span>
         </div>
         <span :class=[sizeClasses[size].text]>{{ text }}</span>
 
@@ -62,6 +62,10 @@ const props = defineProps({
     size: {
         type: String,
         default: 'xl'
+    },
+    hideValue: {
+        type: Boolean,
+        default: false
     }
 }
 );

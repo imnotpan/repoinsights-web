@@ -7,7 +7,8 @@
     </div>
     <div class="grid grid-cols-12 gap-10">
         <div class="col-span-3 z-auto self-start top-20">
-            <Card className="lg:!h-fit" bodyClass="p-2 relative">
+
+            <Card className="lg:!h-fit min-h-screen" bodyClass="p-2 relative">
                 <div class="py-3 border-b flex justify-between mr-2 relative">
                     <p class="font-medium">Filtros</p>
                     <div v-if="activeFilters" @click="cleanFilters"
@@ -17,9 +18,9 @@
                     </div>
                 </div>
                 <div v-if="loading.filters" class="w-full m-auto">
-                    <Loader />
+                    <SkeletonLoader :height=25 :number=10 class="mt-4" />
                 </div>
-                <template v-else class="">
+                <template v-else>
                     <Filter ref="userFilter" :filterData="projectFilters.user.info" :options="projectFilters.user.data"
                         @filterClicked="handleFilterClicked" />
                     <Filter ref="langFilter" :filterData=projectFilters.langs.info :options="projectFilters.langs.data"
@@ -35,7 +36,11 @@
                 <SearchBar placeholder="Buscar proyectos..." @search="filterProjects" />
                 <p><span class="font-medium">{{ projects.total }}</span> proyectos</p>
             </div>
-            <template v-for="project in projects.data" key="project.id">
+            <template v-if="loading.projects">
+                <!-- <Loader /> -->
+                <SkeletonLoader :height=160 className="p-6 my-5" :number=10 />
+            </template>
+            <template v-else v-for="project in projects.data" key="project.id">
                 <ProjectCard :project="project" @selectedProject="updateUserProjects" />
             </template>
         </div>
@@ -49,6 +54,7 @@ import { ref, onMounted } from "vue";
 
 import Card from "@/components/Card";
 import Loader from "@/components/Loader/simpleLoader.vue";
+import SkeletonLoader from "@/components/Skeleton/index.vue";
 
 import SearchBar from "@/components/Explore/SearchBar";
 import ProjectCard from "@/components/Explore/ProjectCard";
@@ -67,6 +73,7 @@ const projectFilters = ref({})
 const projects = ref({})
 const loading = ref({
     filters: true,
+    projects: true
 })
 
 
@@ -102,21 +109,23 @@ const getUrlParams = () => {
 }
 
 const handleFilterClicked = async () => {
-    const params = getUrlParams()
-    await getProjects(params)
-    await getFilters(params)
+    await loadData()
 }
 
 const getProjects = async (params) => {
+    loading.value.projects = true
     const { data } = await axiosClient.get("/api/repoinsights/explore", { params })
     projects.value = data
     originalprojects = { ...data }
+    loading.value.projects = false
 }
 
 const getFilters = async (params) => {
+    loading.value.filters = true
     const { data } = await axiosClient.get("/api/repoinsights/filters/", { params })
     console.log(data)
     projectFilters.value = data
+    loading.value.filters = false
 }
 
 const updateUserProjects = async (project) => {
@@ -150,9 +159,7 @@ const cleanFilters = async () => {
 
 const loadData = async () => {
     const params = getUrlParams()
-    await getFilters(params)
-    loading.value.filters = false
-    await getProjects(params)
+    await Promise.all([getFilters(params), getProjects(params)]);
 }
 
 onMounted(async () => {
