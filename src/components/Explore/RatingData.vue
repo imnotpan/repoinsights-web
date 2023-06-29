@@ -10,7 +10,7 @@
     <div v-else-if="type == 2" class="leading-none text-center">
         <div class="flex gap-2 justify-center">
             <Rating :rating="rating" :size=sizeClasses[size].circle :text=sizeClasses[size].circleText :measure="measure" />
-            <span v-if="showValue" class="font-medium" :class="[sizeClasses[size].value]">{{ roundValue(value) }}<small>{{ measure }}</small></span>
+            <span v-if="showValue" class="font-medium" :class="[sizeClasses[size].value]">{{ roundValue(value) }}<small>{{ measuremnts[measurement] }}</small></span>
         </div>
         <span :class=[sizeClasses[size].text]>
             {{ text }}
@@ -21,6 +21,7 @@
 
 <script setup>
 import Rating from "@/components/Rating";
+import { onMounted, ref } from "vue";
 
 const sizeClasses = {
     xs: {
@@ -43,7 +44,13 @@ const sizeClasses = {
     }
 }
 
+const measuremnts = {
+    h: 'horas',
+    d: 'días',
+    '%': '%'
+}
 
+const measurement = ref('')
 const props = defineProps({
     type: {
         type: Number,
@@ -79,10 +86,22 @@ const props = defineProps({
 );
 
 const roundValue = (value) => {
-    return Math.round(value * 10) / 10
+    let roundedValue = Math.round(value * 10) / 10
+    if (props.measure == '%') {
+        roundedValue = Math.round(roundedValue) * 100
+    }
+    if (props.measure == 'h' && roundedValue > 100) {
+        roundedValue = Math.round(roundedValue / 24)
+        measurement.value = 'd'
+    }
+    return roundedValue
 
 
 }
+
+onMounted(() => {
+    measurement.value = props.measure
+})
 
 
 </script>

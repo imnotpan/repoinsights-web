@@ -70,6 +70,12 @@ const routes = [
         name: "Explorar proyectos",
         component: () => import("@/views/explore/index.vue")
       },
+      {
+        path: "explore/:id",
+        name: "Proyecto",
+        component: () => import("@/views/explore/project.vue"),
+        props: true
+      }
     ],
   },
 ];

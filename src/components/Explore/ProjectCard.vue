@@ -3,12 +3,17 @@
         <div class="flex mb-1 justify-between">
             <div class="flex gap-4 items-center">
                 <LikeStar :project="project" @starClicked="handleSelect" />
-                <a href="#">
+                <router-link :to="{
+                    name: 'Proyecto',
+                    params: {
+                        id: project.id
+                    }
+                }">
                     <h4 class="text-primary-500 font-medium text-base flex gap-1">
                         <div class="underline font-normal">{{ project.owner_name }}</div>/<div class="underline ">{{
                             project.name }}</div>
                     </h4>
-                </a>
+                </router-link>
             </div>
             <div>
                 <a :href="githubUrl(project)" target="_blank" class="btn btn-secondary btn-sm cursor-pointer">GitHub</a>
@@ -33,15 +38,8 @@
         <hr class="my-4" />
         <div class="flex gap-8">
             <template v-for="rating in project.rating" :key="rating.id">
-                <RatingData
-                    :rating="rating.rating"
-                    :text="rating.name"
-                    :value="rating.value"
-                    :type=2
-                    size="xs"
-                    :measure="rating.measurement"
-                    :showValue=rating.show_value
-                />
+                <RatingData :rating="rating.rating" :text="rating.name" :value="rating.value" :type=2 size="xs"
+                    :measure="rating.measurement" :showValue=rating.show_value />
             </template>
         </div>
     </Card>
