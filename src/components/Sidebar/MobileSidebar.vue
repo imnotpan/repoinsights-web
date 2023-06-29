@@ -8,17 +8,17 @@
   >
     <div class="logo-segment flex justify-between items-center px-4 py-6">
       <router-link :to="{ name: 'home' }">
-        <img
+        <!-- <img
           src="@/assets/images/logo/logo.svg"
           alt=""
           v-if="!this.$store.themeSettingsStore.isDark"
-        />
+        /> -->
 
-        <img
+        <!-- <img
           src="@/assets/images/logo/logo-white.svg"
           alt=""
           v-if="this.$store.themeSettingsStore.isDark"
-        />
+        /> -->
       </router-link>
       <span
         class="cursor-pointer text-slate-900 dark:text-white text-2xl"

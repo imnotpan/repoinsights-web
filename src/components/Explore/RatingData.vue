@@ -2,7 +2,8 @@
     <div v-if="type == 1" class="flex w-full justify-between">
         <span :class=[sizeClasses[size].text]>{{ text }}</span>
         <div class="flex gap-2">
-            <span class="font-medium" :class="[sizeClasses[size].value]">{{ roundValue(value) }}<small>{{ measure }}</small></span>
+            <span v-if="showValue"  class="font-medium" :class="[sizeClasses[size].value]">{{ roundValue(value) }}<small>{{ measure
+            }}</small></span>
             <Rating :rating="rating" :size=sizeClasses[size].circle :text=sizeClasses[size].circleText />
         </div>
     </div>
@@ -10,7 +11,9 @@
     <div v-else-if="type == 2" class="leading-none text-center">
         <div class="flex gap-2 justify-center">
             <Rating :rating="rating" :size=sizeClasses[size].circle :text=sizeClasses[size].circleText :measure="measure" />
-            <span v-if="showValue" class="font-medium" :class="[sizeClasses[size].value]">{{ roundValue(value) }}<small>{{ measuremnts[measurement] }}</small></span>
+            <span v-if="showValue" class="font-medium" :class="[sizeClasses[size].value]">{{ roundValue(value) }}<small>{{
+                measuremnts[measurement] ? measuremnts[measurement] : measure
+            }}</small></span>
         </div>
         <span :class=[sizeClasses[size].text]>
             {{ text }}
@@ -45,8 +48,8 @@ const sizeClasses = {
 }
 
 const measuremnts = {
-    h: 'horas',
-    d: 'días',
+    'h': 'horas',
+    'd': 'días',
     '%': '%'
 }
 
@@ -86,17 +89,18 @@ const props = defineProps({
 );
 
 const roundValue = (value) => {
-    let roundedValue = Math.round(value * 10) / 10
+    let roundedValue = null
     if (props.measure == '%') {
-        roundedValue = Math.round(roundedValue) * 100
+        roundedValue = Math.round(value * 100)
     }
-    if (props.measure == 'h' && roundedValue > 100) {
-        roundedValue = Math.round(roundedValue / 24)
-        measurement.value = 'd'
+    else {
+        roundedValue = Math.round(value * 10) / 10
+        if (props.measure == 'h' && roundedValue > 100) {
+            roundedValue = Math.round(roundedValue / 24)
+            measurement.value = 'd'
+        }
     }
     return roundedValue
-
-
 }
 
 onMounted(() => {
