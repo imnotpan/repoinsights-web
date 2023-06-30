@@ -13,7 +13,9 @@
             <Card className="lg:!h-fit min-h-screen" bodyClass="p-2 relative">
                 <div class="py-3 border-b flex justify-between mr-2 relative">
                     <p class="font-medium">Filtros</p>
-                    <div v-if="store.activeFilters" @click="cleanFilters"
+                    <div 
+                        v-if="store.activeFilters" 
+                        @click="cleanFilters"
                         class="group border border-red-700 py-1 px-2 text-xs cursor-pointer transition-colors duration-200 ease-in-out hover:bg-red-50 rounded">
                         <span class="text-red-700  transition-all duration-200 ease-in-out">Limpiar
                             filtros</span>
@@ -36,7 +38,16 @@
         <div class="col-span-8">
             <div class="flex justify-between">
                 <SearchBar placeholder="Buscar proyectos..." @search="store.filterProjects" />
-                <p><span class="font-medium">{{ store.projects.total }}</span> proyectos</p>
+                <div class="flex gap-2 relative">
+                    <p><span class="font-medium">{{ store.projects.total }}</span> proyectos</p>
+                    <SimpleSelector 
+                        :options="store.sortFilters" 
+                        @change="handleSortChange" 
+                        @changeOrder="handleSortOrder"
+                        :selectedOption=store.sortActiveFilter
+                        :loading=store.loading.sort
+                    />
+                </div>
             </div>
             <template v-if="store.loading.projects">
                 <SkeletonLoader :height=160 className="p-6 my-5" :number=10 />
@@ -54,12 +65,14 @@
 import { ref, onMounted } from "vue";
 
 import Card from "@/components/Card";
-import SkeletonLoader from "@/components/Skeleton/index.vue";
+import SkeletonLoader from "@/components/Skeleton/index";
 
 import SearchBar from "@/components/Explore/SearchBar";
 import ProjectCard from "@/components/Explore/ProjectCard";
-import FeaturedCard from "@/components/Explore/FeaturedCard.vue";
+import FeaturedCard from "@/components/Explore/FeaturedCard";
 import Filter from "@/components/Explore/Filter";
+
+import SimpleSelector from "@/components/Select/SimpleSelector";
 
 import { useToast } from 'vue-toastification';
 import { useExploreStore } from "@/store/exploreProject";
@@ -67,10 +80,13 @@ import { useExploreStore } from "@/store/exploreProject";
 const toast = useToast();
 let store = useExploreStore();
 
+const userFilter = ref(null);
+const langFilter = ref(null);
+const commitFilter = ref(null);
+
 const handleFilterClicked = async () => {
     await store.loadData()
 }
-
 
 const updateUserProjects = async (project) => {
     try {
@@ -84,17 +100,23 @@ const updateUserProjects = async (project) => {
     }
 }
 
-
-const userFilter = ref(null);
-const langFilter = ref(null);
-const commitFilter = ref(null);
-
 const cleanFilters = async () => {
     userFilter.value.cleanFilters();
     langFilter.value.cleanFilters();
     commitFilter.value.cleanFilters();
     await store.loadData()
 };
+
+const handleSortChange = async (option) => {
+    console.log(option)
+    store.sortByFilter(option.id);
+}
+
+const handleSortOrder = async (order) => {
+    console.log(order)
+    store.sortDirection = order
+    store.sortByOrder(order)
+}
 
 onMounted(async () => {
     await Promise.all([store.loadData(), store.getFeaturedProjects()])

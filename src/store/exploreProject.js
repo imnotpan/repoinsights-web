@@ -15,9 +15,12 @@ export const useExploreStore = defineStore({
             filters: true,
             projects: true,
             featured: true,
+            sort: true
         },
-        searchTimeout: null,  // nuevo estado para el temporizador
-
+        searchTimeout: null,
+        sortFilters: [],
+        sortActiveFilter: null,
+        sortDirection: "desc"
     }),
 
     actions: {
@@ -37,7 +40,7 @@ export const useExploreStore = defineStore({
                 clearTimeout(this.searchTimeout);
             }
             this.searchTimeout = setTimeout(() => {
-                if (search.length === 0) {
+                if (search === null || search.length === 0) {
                     this.projects = { ...this.originalProjects };
                 } else {
                     const searchTerm = search.toLowerCase();
@@ -54,7 +57,11 @@ export const useExploreStore = defineStore({
 
         async loadData() {
             const params = this.getUrlParams();
-            await Promise.all([this.getFilters(params), this.getProjects(params)]);
+            await Promise.all([
+                this.getFilters(params),
+                this.getProjects(params),
+                this.getSortFilters(params),
+            ]);
         },
 
         async getFeaturedProjects() {
@@ -69,6 +76,9 @@ export const useExploreStore = defineStore({
             let params = {};
             for (const [key, value] of urlParams) {
                 params[key] = value;
+                // if (key !== 'sort') {
+                //     params[key] = value;
+                // }
             }
             if (Object.keys(params).length !== 0 && params.constructor === Object) {
                 this.activeFilters = true;
@@ -99,7 +109,63 @@ export const useExploreStore = defineStore({
                 project_id: project.id,
                 action: project.selected ? "add" : "remove"
             })
+        },
+
+        async getSortFilters(params) {
+            this.loading.sort = true;
+            const { data } = await axiosClient.get("/api/repoinsights/sort/");
+            this.sortFilters = data.metrics;
+            this.sortActiveFilter =
+                params.sort
+                    ? params.sort * 1
+                    : null
+            this.loading.sort = false;
+        },
+
+        async sortByFilter(filter, order = "desc") {
+            if ((filter === this.sortActiveFilter) || (filter === undefined)) {
+                return
+            }
+            this.addParamToUrl("sort", filter);
+            this.sortActiveFilter = !filter ? this.sortActiveFilter : filter;
+            this.loading.projects = true;
+            await new Promise(resolve => {
+                setTimeout(() => {
+                    this.projects.data.sort((a, b) => {
+                        const ratingA = a.rating.find(rating => rating.id === filter);
+                        const ratingB = b.rating.find(rating => rating.id === filter);
+
+                        const valueA = ratingA ? ratingA.value : 0;
+                        const valueB = ratingB ? ratingB.value : 0;
+
+                        return order === "desc" ? valueB - valueA : valueA - valueB;
+                    });
+                    resolve();
+                }, 0);
+            });
+            this.loading.projects = false;
+        },
+
+        async sortByOrder(order) {
+            this.loading.projects = true;
+            this.loading.sort = true;
+            await new Promise(resolve => {
+                setTimeout(() => {
+                    this.projects.data.reverse();
+                    resolve();
+                }, 0);
+            });
+            this.loading.projects = false;
+            this.loading.sort = false;
+
+        },
+
+
+        addParamToUrl(key, value) {
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.set(key, value);
+            window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
         }
 
-    },
+    }
 });
