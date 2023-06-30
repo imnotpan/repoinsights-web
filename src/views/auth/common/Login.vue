@@ -20,7 +20,6 @@ import { useToast } from 'vue-toastification';
 import { onMounted } from 'vue';
 import { ref } from 'vue';
 import axiosClient from '@/plugins/axios';
-import axios from 'axios';
 
 
 const toast = useToast();
@@ -30,9 +29,15 @@ const loginUrl = ref('')
 
 
 onMounted(async () => {
-    const response = await axiosClient.get('/api/social/login/github/')
-    console.log(response.data)
-    loginUrl.value = response.data.auth_url
+    try{
+        const response = await axiosClient.get('/api/social/login/github/')
+        console.log(response.data)
+        loginUrl.value = response.data.auth_url
+    }
+    catch(error){
+        console.log(error)
+        toast.error('Something went wrong')
+    }
 });
 
 
