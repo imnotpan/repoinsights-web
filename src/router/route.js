@@ -64,6 +64,17 @@ const routes = [
         path: "add-project",
         name: "Agregar proyecto personal",
         component: () => import("@/views/home/projects.vue")
+      },
+      {
+        path: "explore",
+        name: "Explorar proyectos",
+        component: () => import("@/views/explore/index.vue")
+      },
+      {
+        path: "explore/:id",
+        name: "Proyecto",
+        component: () => import("@/views/explore/project.vue"),
+        props: true
       }
     ],
   },

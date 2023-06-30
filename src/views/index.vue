@@ -8,7 +8,16 @@
           <p>Razones y explicación...</p>
         </div>
         <Button btnClass="dark:text-white dark:bg-slate-700 btn bg-slate-900 text-white" text="Agregar"
-          @click="navigateToRoute" />
+          @click="personalProjectsRoute" />
+      </Card>
+
+      <Card className="col-span-3">
+        <div class="mb-4">
+          <h4 class="text-lg">Buscar proyectos</h4>
+          <p>Selecciona proyectos para analizar</p>
+        </div>
+        <Button btnClass="dark:text-white dark:bg-slate-700 btn bg-slate-900 text-white" text="Agregar"
+          @click="browseProjects" />
       </Card>
     </div>
   </div>
@@ -29,9 +38,12 @@ const username = userStore.user?.name;
 
 
 const router = useRouter();
-const navigateToRoute = () => {
+const personalProjectsRoute = () => {
   router.push({ name: 'Agregar proyecto personal' });
 }
 
+const browseProjects = () => {
+  router.push({ name: 'Explorar proyectos' });
+}
 
 </script>

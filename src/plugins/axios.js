@@ -4,7 +4,7 @@ import { useUserStore } from '@/store/user';
 
 const axiosClient = axios.create({
   // use .env api_url 
-  baseURL:  `http://${import.meta.env.VITE_API_URL}:${import.meta.env.VITE_API_PORT}`,
+  baseURL:  `${import.meta.env.VITE_API_URL}:${import.meta.env.VITE_API_PORT}`,
 });
 
 axiosClient.interceptors.request.use((config) => {

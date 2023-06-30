@@ -37,23 +37,23 @@
             this.$store.themeSettingsStore.isMouseHovered
           "
         >
-          <img
+          <!-- <img
             src="@/assets/images/logo/logo.svg"
             alt=""
             v-if="
               !this.$store.themeSettingsStore.isDark &&
               !this.$store.themeSettingsStore.semidark
             "
-          />
+          /> -->
 
-          <img
+          <!-- <img
             src="@/assets/images/logo/logo-white.svg"
             alt=""
             v-if="
               this.$store.themeSettingsStore.isDark ||
               this.$store.themeSettingsStore.semidark
             "
-          />
+          /> -->
         </router-link>
         <router-link
           :to="{ name: 'home' }"
@@ -62,22 +62,22 @@
             !this.$store.themeSettingsStore.isMouseHovered
           "
         >
-          <img
+          <!-- <img
             src="@/assets/images/logo/logo-c.svg"
             alt=""
             v-if="
               !this.$store.themeSettingsStore.isDark &&
               !this.$store.themeSettingsStore.semidark
             "
-          />
-          <img
+          /> -->
+          <!-- <img
             src="@/assets/images/logo/logo-c-white.svg"
             alt=""
             v-if="
               this.$store.themeSettingsStore.isDark ||
               this.$store.themeSettingsStore.semidark
             "
-          />
+          /> -->
         </router-link>
         <span
           class="cursor-pointer text-slate-900 dark:text-white text-2xl"

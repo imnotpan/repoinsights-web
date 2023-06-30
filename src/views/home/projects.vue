@@ -53,11 +53,6 @@
         </Card>
 
         <Modal title="Token personal de GitHub" :activeModal="show" @close="show = false" >
-                <!-- <div class="flex justify-start gap-3">
-                    <button class="btn-dark px-6 py-2 rounded-md">GitHub</button>
-                    <button disabled class="px-6 py-2 rounded-md">GitLab</button>
-                    <button disabled class="px-6 py-2 rounded-md">BitBucket</button>
-                </div> -->
                 <p>No sabes como obtenerlo? <span><a href="https://docs.github.com/es/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token" target="_blank">Instrucciones</a></span></p>
                 <form @submit.prevent="onSubmit" class="space-y-4 mt-4">
                     <Textinput type="text" placeholder="Ingresa tu token de acceso" name="token" v-model="token"
@@ -162,8 +157,6 @@ const onSubmit = handleSubmit(async () => {
 
 });
 
-
-
 const toggleModal = () => {
     show.value = !show.value
 }
@@ -192,7 +185,8 @@ const getUserData = (async () => {
         console.log(repositories.value)
         console.log(pagination.value)
     } catch (error) {
-        console.error('Error fetching user repos', error);
+        console.error('Error obteniendo proyectos del usuario', error);
+        toast.error("Error obteniendo proyectos del usuario")
     }
 })
 
@@ -203,8 +197,7 @@ const getTokensData = (async () => {
 })
 
 onMounted(async () => {
-    await getUserData()
-    await getTokensData()
+    Promise.all([getUserData(), getTokensData()])
 })
 
 </script>
