@@ -11,6 +11,15 @@ export default defineConfig({
       dirs: ["src/assets/images"],
     }),
   ],
+  server: {
+    host: '0.0.0.0',
+    port: 5173,
+    usePolling: true,
+  },
+  preview: {
+    port: 5173,
+  },
+  
   resolve: {
     extensions: [".mjs", ".js", ".ts", ".jsx", ".tsx", ".json", ".vue", ".css"],
     alias: {
