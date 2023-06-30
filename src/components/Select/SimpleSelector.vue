@@ -31,7 +31,7 @@ const props = defineProps({
         default: () => []
     },
     selectedOption: {
-        type: Number,
+        type: String,
         default: null
     },
     loading: {
@@ -48,7 +48,7 @@ const ascending = ref(props.order === "asc");
 
 
 const handleChange = (event) => {
-    const selectedOptionId = Number(event.target.value);
+    const selectedOptionId = event.target.value
     const selectedOption = props.options.find(option => option.id === selectedOptionId);
     if (selectedOption) emit('change', selectedOption);
 }
