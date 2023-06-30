@@ -117,7 +117,7 @@ export const useExploreStore = defineStore({
             this.sortFilters = data.metrics;
             this.sortActiveFilter =
                 params.sort
-                    ? params.sort * 1
+                    ? params.sort
                     : null
             this.loading.sort = false;
         },
