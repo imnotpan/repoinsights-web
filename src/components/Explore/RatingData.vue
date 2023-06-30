@@ -95,7 +95,7 @@ const roundValue = (value) => {
     }
     else {
         roundedValue = Math.round(value * 10) / 10
-        if (props.measure == 'h' && roundedValue > 100) {
+        if (props.measure == 'h' && roundedValue > 24) {
             roundedValue = Math.round(roundedValue / 24)
             measurement.value = 'd'
         }
