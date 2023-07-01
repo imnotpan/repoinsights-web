@@ -39,8 +39,8 @@ const toast = useToast();
 
 
 const getDashboards = async () => {
-  const { data } = await axiosClient.post('/api/metabase/public/dashboards/')
-  dashboards.value = data.iframes;
+  const { data } = await axiosClient.post('/api/metabase/public/dashboards/shared/')
+  dashboards.value = data.dashboards;
 }
 
 const getProjects = async () => {
