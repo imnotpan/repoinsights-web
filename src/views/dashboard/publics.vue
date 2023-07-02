@@ -2,7 +2,7 @@
   <div v-if="serverError" class="w-full text-center">
     <span class="text-xl font-bold dark:text-white text-slate-700">Ha ocurrido un problema...</span>
   </div>
-  
+
   <div v-else>
     <div class="grid grid-cols-8">
       <div class="col-span-4 fromGroup relative">
@@ -14,7 +14,9 @@
       </div>
     </div>
     <div v-for="dashboard in dashboards" :key="dashboard.iframe" class="my-8">
-      <iframe :src="dashboard.iframe" frameborder="0" scrolling="no" class="w-full h-screen"></iframe>
+      <Iframe 
+        :src="dashboard.iframe"
+      ></Iframe>
     </div>
 
 
@@ -25,6 +27,8 @@
 import axiosClient from '@/plugins/axios';
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
+
+import Iframe from '@/components/Iframe/index.vue'
 
 import { onMounted, ref } from 'vue';
 import { useToast } from 'vue-toastification';
