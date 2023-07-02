@@ -1,10 +1,9 @@
 <template>
     {{ project }}
-    <div v-for="dashboard in dashboards" :key="dashboard.iframe" class="my-8">
-        <Iframe 
-            :src="dashboard.iframe"
-        ></Iframe>
-    </div>
+    <Tabs
+        v-if="dashboards.length > 0"
+        :dashboards="dashboards"
+    />
 </template>
 
 <script setup>
@@ -12,7 +11,7 @@ import { onMounted, ref } from 'vue'
 import { useExploreStore } from "@/store/exploreProject";
 import axiosClient from '@/plugins/axios';
 
-import Iframe from '@/components/Iframe/index.vue'
+import Tabs from '@/components/Dashboard/Tabs.vue'
 
 let store = useExploreStore();
 const project = ref(null)
