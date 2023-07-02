@@ -2,7 +2,7 @@ import "animate.css";
 import "flatpickr/dist/flatpickr.css";
 import "simplebar/dist/simplebar.min.css";
 import "sweetalert2/dist/sweetalert2.min.css";
-import {createApp} from "vue";
+import { createApp } from "vue";
 import VueFlatPickr from "vue-flatpickr-component";
 import VueGoodTablePlugin from "vue-good-table-next";
 import "vue-good-table-next/dist/vue-good-table-next.css";
@@ -17,8 +17,9 @@ import "./assets/scss/auth.scss";
 import "./assets/scss/tailwind.scss";
 import router from "./router";
 import VCalendar from "v-calendar";
-import {createPinia} from 'pinia'
+import { createPinia } from 'pinia'
 import "v-calendar/dist/style.css";
+import { iframeResize } from 'iframe-resizer'
 
 const pinia = createPinia()
 
@@ -39,10 +40,23 @@ const app = createApp(App)
     .use(VCalendar)
 
 app.config.globalProperties.$store = {};
+
+const resizeDirective = {
+    beforeMount(el, { value = {} }) {
+        el.addEventListener('load', () => iframeResize(value, el))
+    },
+    beforeUnmount(el) {
+        el.iFrameResizer.removeListeners();
+    }
+}
+
+app.directive('resize', resizeDirective)
+
+
 app.mount("#app");
 
-import {useThemeSettingsStore} from "@/store/themeSettings";
-import {useUserStore} from "@/store/user";
+import { useThemeSettingsStore } from "@/store/themeSettings";
+import { useUserStore } from "@/store/user";
 const themeSettingsStore = useThemeSettingsStore()
 const userStore = useUserStore()
 

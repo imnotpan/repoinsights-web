@@ -1,19 +1,21 @@
 <template>
     {{ project }}
     <div v-for="dashboard in dashboards" :key="dashboard.iframe" class="my-8">
-      <iframe :src="dashboard.iframe" frameborder="0" scrolling="no" class="w-full h-screen"></iframe>
+        <iframe v-resize="resizeOptions" :src="dashboard.iframe" frameborder="0" scrolling="no" class="min-w-full"></iframe>
     </div>
 </template>
 
 <script setup>
-import { defineProps, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useExploreStore } from "@/store/exploreProject";
 import axiosClient from '@/plugins/axios';
-
 
 let store = useExploreStore();
 const project = ref(null)
 const dashboards = ref([])
+const resizeOptions = {
+    log: true,
+}
 
 
 const props = defineProps({

@@ -2386,6 +2386,11 @@ iconv-lite@0.6:
   dependencies:
     safer-buffer ">= 2.1.2 < 3.0.0"
 
+iframe-resizer@^4.3.6:
+  version "4.3.6"
+  resolved "https://registry.npmjs.org/iframe-resizer/-/iframe-resizer-4.3.6.tgz"
+  integrity sha512-wz0WodRIF6eP0oGQa5NIP1yrITAZ59ZJvVaVJqJRjaeCtfm461vy2C3us6CKx0e7pooqpIGLpVMSTzrfAjX9Sg==
+
 ignore@^4.0.6:
   version "4.0.6"
   resolved "https://registry.npmjs.org/ignore/-/ignore-4.0.6.tgz"
