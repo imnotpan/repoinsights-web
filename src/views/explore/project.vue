@@ -1,7 +1,9 @@
 <template>
     {{ project }}
     <div v-for="dashboard in dashboards" :key="dashboard.iframe" class="my-8">
-        <iframe v-resize="resizeOptions" :src="dashboard.iframe" frameborder="0" scrolling="no" class="min-w-full"></iframe>
+        <Iframe 
+            :src="dashboard.iframe"
+        ></Iframe>
     </div>
 </template>
 
@@ -10,13 +12,11 @@ import { onMounted, ref } from 'vue'
 import { useExploreStore } from "@/store/exploreProject";
 import axiosClient from '@/plugins/axios';
 
+import Iframe from '@/components/Iframe/index.vue'
+
 let store = useExploreStore();
 const project = ref(null)
 const dashboards = ref([])
-const resizeOptions = {
-    log: true,
-}
-
 
 const props = defineProps({
     id: {
