@@ -7,6 +7,7 @@
         v-resize="{
             log: false,
         }"
+        @load="handleLoad"
     >
     </iframe>
 </template>
@@ -21,7 +22,7 @@ const props = defineProps({
     }
 })
 
-const resizeOptions = {
-    log: true,
-}
+const handleLoad = () => {
+    console.log('El iframe ha terminado de cargar');
+  };
 </script>
