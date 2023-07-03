@@ -1,5 +1,4 @@
 <template>
-    {{ project }}
     <Tabs
         v-if="dashboards.length > 0"
         :dashboards="dashboards"
