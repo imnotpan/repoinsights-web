@@ -20,7 +20,7 @@
             <Iframe 
                 v-for="(item, i) in dashs" :key="`iframe-${i}`" 
                 :src="item.iframe"
-                :class="{ 'absolute top-[-999px] left-[-999px]': i !== selectedIndex, 'w-full h-full': i === selectedIndex }"></Iframe>
+                :class="{ 'absolute top-[-9999px] left-[-9999px]': i !== selectedIndex, 'w-full h-full': i === selectedIndex }"></Iframe>
         </div>
     </TabGroup>
 </template>
