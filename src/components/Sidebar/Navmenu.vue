@@ -14,8 +14,8 @@
       <!-- ?? single menu with no childred !!  -->
 
       <router-link
-        :to="`${item.link}`"
-        class="menu-link"
+        :to="{ name: item.link}"
+        class="menu-link gap-1"
         v-if="!item.child && !item.isHeadr"
       >
         <span class="menu-icon" v-if="item.icon">
@@ -73,7 +73,7 @@
             :key="index"
             class="block ltr:pl-4 rtl:pr-4 ltr:pr-1 rtl:-l-1 mb-4 first:mt-4"
           >
-            <router-link :to="ci.childlink" v-slot="{ isActive }">
+            <router-link :to="{name: ci.link}" v-slot="{ isActive }">
               <span
                 class="text-sm flex space-x-3 rtl:space-x-reverse items-center transition-all duration-150"
                 :class="
