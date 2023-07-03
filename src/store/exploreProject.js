@@ -100,6 +100,7 @@ export const useExploreStore = defineStore({
             this.loading.projects = true;
             const { data } = await axiosClient.get("/api/repoinsights/explore", { params });
             this.projects = data;
+            this.sortByFilter(params.sort);
             this.loading.projects = false;
             this.originalProjects = { ...data };
         },
@@ -123,18 +124,21 @@ export const useExploreStore = defineStore({
         },
 
         async sortByFilter(filter) {
-            if (!filter || filter === this.sortActiveFilter) {
+            if (!filter) {
+                console.log('no filter or same filter');
                 return;
             }
 
             const sortFilter = this.sortFilters.find(sortFilter => sortFilter.id === filter);
 
             if (!sortFilter) {
+                console.log('no sort filter found');
                 return;
             }
             this.sortDirectionInverted = false
             this.sortActiveFilter = filter;
             this.loading.projects = true;
+            this.addParamToUrl('sort', filter);
 
             const extractValue = (rating) => {
                 const ratingValue = rating.find(rating => rating.id === filter);
