@@ -4,13 +4,13 @@
             class="w-full py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"
             name="filter" :value="selectedOption" @change="handleChange">
             <option value="">Ordenar por</option>
-            <option v-for="option in options" :value="option.id" :key="option.id">
+            <option v-for="(option, index) in options" :value="option.id" :key="option.id">
                 {{ option.name }}
             </option>
         </select>
         <button class="bg-white rounded-md focus:ring-1  !border-gray-300 h-full">
             <SimpleLoader v-if="loading" />
-            <div v-else @click="toggleOrder">
+            <div v-else @click="toggleOrder" class="flex items-center gap-1">
                 <Icon :icon="selectIcon" class="text-2xl"/>
             </div>
         </button>
@@ -20,11 +20,12 @@
 <script setup>
 
 import SimpleLoader from "@/components/Loader/simpleLoader.vue"
+import { useExploreStore } from "@/store/exploreProject";
 import { Icon } from '@iconify/vue';
-
 import { computed, ref } from "vue";
 
-const emit = defineEmits(['change']);
+const store = useExploreStore();
+const emit = defineEmits(['change', 'changeOrder']);
 const props = defineProps({
     options: {
         type: Array,
@@ -37,15 +38,8 @@ const props = defineProps({
     loading: {
         type: Boolean,
         default: false
-    },
-    order:{
-        type: String,
-        default: "asc"
     }
 })
-
-const ascending = ref(props.order === "asc");
-
 
 const handleChange = (event) => {
     const selectedOptionId = event.target.value
@@ -54,9 +48,10 @@ const handleChange = (event) => {
 }
 
 const toggleOrder = () => {
-    ascending.value = !ascending.value;
-    emit('changeOrder', ascending.value ? "asc" : "desc");
+    store.sortDirectionInverted = !store.sortDirectionInverted;
+
+    emit('changeOrder', store.sortDirectionInverted);
 }
 
-const selectIcon = computed(() => ascending.value ? "heroicons-outline:arrow-up" : "heroicons-outline:arrow-down");
+const selectIcon = computed(() => store.sortDirectionInverted ? "heroicons-outline:arrow-up" : "heroicons-outline:arrow-down");
 </script>

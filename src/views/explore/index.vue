@@ -42,7 +42,7 @@
                     <p><span class="font-medium">{{ store.projects.total }}</span> proyectos</p>
                     <SimpleSelector 
                         :options="store.sortFilters" 
-                        @change="handleSortChange" 
+                        @change="handleChangeSortFilter" 
                         @changeOrder="handleSortOrder"
                         :selectedOption=store.sortActiveFilter
                         :loading=store.loading.sort
@@ -107,8 +107,7 @@ const cleanFilters = async () => {
     await store.loadData()
 };
 
-const handleSortChange = async (option) => {
-    console.log(option)
+const handleChangeSortFilter = async (option) => {
     store.sortByFilter(option.id);
 }
 
