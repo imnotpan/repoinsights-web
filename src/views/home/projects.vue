@@ -1,66 +1,75 @@
 <template>
-    <div class="grid grid-cols-4 gap-4">
-        <Card className="p-8 col-span-4">
+    <div class="grid grid-cols-12 gap-4">
+        <Card className="col-span-6">
             <div class="mb-6">
-                <p class="text-xl font-semibold text-slate-900 dark:text-white">Tokens de acceso</p>
-                <p>Tokens disponibles para extraer la información de tu repositorio</p>
+                <p class="text-lg font-semibold text-slate-900 dark:text-white">Agrega tu repositorio privado</p>
+                <p class="text-base">Repositorios de {{ username }}</p>
             </div>
-            <div>
-                <div class="relative" v-if="tokens.length > 0">
-                    <vue-good-table :columns="tokensColumns" :rows="tokens" />
-                    <div class="text-center mt-10">
-                        <!-- <p class="font-light">No has agregado tokens personales...</p> -->
-                        <button class="btn-outline-warning px-2 py-3 rounded-sm" @click="toggleModal">Agregar token personal</button>
-                    </div>
-                </div>
-
-            </div>
-        </Card>
-
-        <Card className="py-8 px-4 col-span-4">
-            <p class="mb-6 text-xl font-semibold text-slate-900 dark:text-white">Agrega tu repositorio privado</p>
-            <div class="relative w-full">
-                <p class="text-center font-semibold">Repositorios de {{ username }}</p>
-                <div>
-                    <ul>
-                        <li v-for="repo in repositories" :key="repo.id" @click="selectRepo(repo)">
-                            <div
-                                class="flex items-center my-2 cursor-pointer hover:bg-gray-100 p-3 rounded-md transition-colors duration-200 border-b-2">
-                                <div class="flex items-center flex-1">
-                                    <div class="hover:!text-red-400">
-                                        <a :href="repo.url" target="_blank">
-                                            <h4 class="text-sm"> {{ repo.name }}</h4>
-                                        </a>
-                                        <p class="text-sm">{{ repo.description }}</p>
-                                    </div>
-                                </div>
-                                <div>
-                                    <Badge v-if="repo.added && repo.loading === false" label="Agregado" badgeClass="bg-green-500 text-white" />
-                                    <Badge v-else-if="!repo.added && repo.loading === false" label="Agregar" badgeClass="bg-blue-500 text-white"  />
-                                    <SimpleLoader v-else />
-                                </div>
+            <div class="min-h-[300px]">
+                <template v-for="repo in repositories" :key="repo.id" @click="selectRepo(repo)">
+                    <div class="flex justify-between my-3 pb-3 border-b">
+                        <div class="flex trunc gap-4">
+                            <div>
+                                <h4 class="text-sm capitalize"> {{ repo.name }}</h4>
+                                <p class="text-xs" :class="{ 'show': repo.description, 'invisible': !repo.description }">
+                                    {{ repo.description || 'Sin descripción' }}
+                                </p>
                             </div>
-                        </li>
-                    </ul>
-                    <div class="flex justify-around">
-                        <button class="disabled:opacity-50 disabled:cursor-not-allowed" :disabled="!pagination.prev"
-                            @click="changePage(pagination.prev)">anterior</button>
-                        <button class="disabled:opacity-50 disabled:cursor-not-allowed" @click="changePage(pagination.next)"
-                            :disabled="!pagination.next">siguente</button>
+                        </div>
+                        <div @click="selectRepo(repo)" class="cursor-pointer">
+                            <Badge v-if="repo.added && repo.loading === false" label="Eliminar"
+                                badgeClass="bg-red-400 text-white !font-normal" />
+                            <Badge v-else-if="!repo.added && repo.loading === false" label="Agregar"
+                                badgeClass="bg-blue-400 text-white !font-normal" />
+                            <SimpleLoader v-else />
+                        </div>
                     </div>
+                </template>
+            </div>
+            <Pagination :pagination="pagination" @changePage=changePage />
+
+        </Card>
+        <Card className="col-span-6 relative !h-fit">
+            <div class="mb-6">
+                <p class="text-lg font-semibold text-slate-900 dark:text-white">Tokens de acceso</p>
+                <p class="text-base">Tokens disponibles para extraer la información de tu repositorio</p>
+            </div>
+            <div v-if="tokens.length > 0">
+                <!-- <vue-good-table :columns="tokensColumns" :rows="tokens" compactMode /> -->
+                <!-- simple table  -->
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-50 dark:bg-gray-800">
+                        <tr>
+                            <th class="text-left">Token</th>
+                            <th class="text-left">Creación</th>
+                            <th class="text-left">Tipo</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                        <tr v-for="token in tokens" :key="token.id">
+                            <td class="text-left font-semibold">{{ token.value }}</td>
+                            <td class="text-left">{{ toLocalDate(token.created_at) }}</td>
+                            <td class="text-left">{{ token.type }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="text-center mt-10">
+                    <button class="btn-outline-primary px-2 py-1 rounded-sm text-sm" @click="toggleModal">Agregar</button>
                 </div>
             </div>
         </Card>
 
-        <Modal title="Token personal de GitHub" :activeModal="show" @close="show = false" >
-                <p>No sabes como obtenerlo? <span><a href="https://docs.github.com/es/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token" target="_blank">Instrucciones</a></span></p>
-                <form @submit.prevent="onSubmit" class="space-y-4 mt-4">
-                    <Textinput type="text" placeholder="Ingresa tu token de acceso" name="token" v-model="token"
-                        :error="tokenError" :msgTooltip=true />
-                    <div class="text-right mt-2">
-                        <Button text="Agregar" btnClass="btn-dark "></Button>
-                    </div>
-                </form>
+        <Modal title="Token personal de GitHub" :activeModal="show" @close="show = false">
+            <p>No sabes como obtenerlo? <span><a
+                        href="https://docs.github.com/es/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token"
+                        target="_blank">Instrucciones</a></span></p>
+            <form @submit.prevent="onSubmit" class="space-y-4 mt-4">
+                <Textinput type="text" placeholder="Ingresa tu token de acceso" name="token" v-model="token"
+                    :error="tokenError" :msgTooltip=true />
+                <div class="text-right mt-2">
+                    <Button text="Agregar" btnClass="btn-dark "></Button>
+                </div>
+            </form>
         </Modal>
     </div>
 </template>
@@ -72,13 +81,14 @@ import { useField, useForm } from "vee-validate"
 import * as yup from "yup";
 import { onMounted, ref } from "vue";
 import { useUserStore } from "@/store/user";
-import Icon from "@/components/Icon";
 import SimpleLoader from "@/components/Loader/simpleLoader.vue"
 import { useToast } from 'vue-toastification';
 import Card from "@/components/Card"
 import axiosClient from "@/plugins/axios";
 import Modal from "@/components/Modal";
-import Badge from "@/components/Badge"; 
+import Badge from "@/components/Badge";
+
+import Pagination from "@/components/Navigation/pagination.vue"
 
 
 const userStore = useUserStore();
@@ -95,29 +105,10 @@ const schema = yup.object({
     token: yup.string().required()
 });
 
-const tokensColumns = [
-    {
-        field: "value",
-        label: "Token",
-    },
-    {
-        field: "created_at",
-        label: "Fecha de creación",
-        type: "date",
-        // 2023-06-01T00:58:49.125Z	
-        dateInputFormat: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-        dateOutputFormat: "dd/MM/yyyy",
-    },
-    {
-        field: "type",
-        label: "Tipo",
-    }
-]
-
 const selectRepo = (repo) => {
     if (repo.loading === false && repo.added === false) {
         repo.loading = !repo.loading;
-        axiosClient.post("api/github/projects/add",{
+        axiosClient.post("api/github/projects/add", {
             id: repo.id,
             url: repo.url,
             name: repo.name
@@ -164,12 +155,9 @@ const toggleModal = () => {
 const changePage = async (page) => {
     if (page) {
         try {
-            console.log("loading user repos...")
             const response = await axiosClient.get(`api/github/projects/?page=${page}`)
             repositories.value = response.data.projects
             pagination.value = response.data.pagination
-            console.log(repositories.value)
-            console.log(pagination.value)
         } catch (error) {
             console.error('Error fetching user repos', error);
         }
@@ -178,12 +166,9 @@ const changePage = async (page) => {
 
 const getUserData = (async () => {
     try {
-        console.log("loading user repos...")
         const response = await axiosClient.get("api/github/projects/")
         repositories.value = response.data.projects
         pagination.value = response.data.pagination
-        console.log(repositories.value)
-        console.log(pagination.value)
     } catch (error) {
         console.error('Error obteniendo proyectos del usuario', error);
         toast.error("Error obteniendo proyectos del usuario")
@@ -193,8 +178,12 @@ const getUserData = (async () => {
 const getTokensData = (async () => {
     const { data } = await axiosClient.get("api/github/tokens")
     tokens.value = data.data
-    console.log(tokens.value)
 })
+
+const toLocalDate = (date) => {
+    const format = "dd/MM/yyyy"
+    return new Date(date).toLocaleDateString("es-ES", { format })
+}
 
 onMounted(async () => {
     Promise.all([getUserData(), getTokensData()])
@@ -203,19 +192,14 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
-$bg-color-disabled: #D3D3D3; // LightGray
-$text-color-disabled: #FFFFFF; // White
-
-button {
-    &:disabled {
-        background-color: $bg-color-disabled;
-        color: $text-color-disabled;
-        cursor: not-allowed;
-    }
+.trunc {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
-
-.clickable:hover {
-    background-color: #F3F4F6; // Hover color (Light gray)
+td,
+th {
+    padding: 0.5rem 0.5rem;
 }
 </style>

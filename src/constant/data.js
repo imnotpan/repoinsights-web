@@ -9,17 +9,17 @@ export const menuItems = [
     link: "home",
   },
   {
-    title: "Dashboard",
+    title: "Comparar repositorios",
     icon: "heroicons-outline:chart-pie",
     link: "dashboard",
   },
   {
-    title: "Mis dashboard",
-    icon: "heroicons-outline:chart-bar",
+    title: "Repositorios favoritos",
+    icon: "heroicons-outline:star",
     link: "my-dashboard",
   },
   {
-    title: "Metabase",
+    title: "Analítica avanzada",
     icon: "heroicons-outline:chart-square-bar",
     link: "metabase",
   }

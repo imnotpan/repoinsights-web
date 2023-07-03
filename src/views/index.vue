@@ -1,23 +1,23 @@
 <template>
   <div>
     <h2 class="text-2xl mb-10">Bienvenido {{ username }} 👋</h2>
-    <div class="grid grid-cols-8 gap-4">
-      <Card className="col-span-3">
-        <div class="mb-4">
-          <h4 class="text-lg">Agrega tu repositorio privado</h4>
-          <p>Razones y explicación...</p>
-        </div>
-        <Button btnClass="dark:text-white dark:bg-slate-700 btn bg-slate-900 text-white" text="Agregar"
-          @click="personalProjectsRoute" />
-      </Card>
+    <div class="grid grid-cols-12 gap-10">
+      <CardHome title="Agrega tu repositorio personal" subtitle="Privado o publico" buttonText="Agregar" routeName="Agregar proyecto personal" />
+      <CardHome title="Explorar repositorios" subtitle="Publicos" buttonText="Buscar" routeName="Explorar proyectos" />
+      <CardHome title="Pendiente" subtitle="Pendiente" buttonText="Buscar" routeName="Explorar proyectos" />
+      <div class="col-span-6">
 
-      <Card className="col-span-3">
-        <div class="mb-4">
-          <h4 class="text-lg">Buscar proyectos</h4>
-          <p>Selecciona proyectos para analizar</p>
+      </div>
+      <Card className="col-span-6">
+        <div class="flex justify-between mb-4">
+          <h4 class="text-sm">Tus Proyectos seleccionados ({{ userStore.favoriteProjects.length }})</h4>
+          <router-link class="text-xs font-semibold text-slate-900" :to="{ name: 'Explorar proyectos' }">
+            Ver todos
+          </router-link>
         </div>
-        <Button btnClass="dark:text-white dark:bg-slate-700 btn bg-slate-900 text-white" text="Agregar"
-          @click="browseProjects" />
+        <template v-for="(project, index) in userStore.favoriteProjects">
+          <SimpleCard :project="project" :index=index />
+        </template>
       </Card>
     </div>
   </div>
@@ -25,25 +25,14 @@
 
 <script setup>
 
-import Modal from "@/components/Modal";
-import Button from "@/components/Button";
-import { useRouter } from 'vue-router'
 import Card from "@/components/Card"
 import { useUserStore } from "@/store/user";
-import { ref } from "vue";
+
+import SimpleCard from "@/components/Card/Simple.vue";
+import CardHome from "@/components/Card/Home/index.vue";
 
 
 const userStore = useUserStore();
 const username = userStore.user?.name;
-
-
-const router = useRouter();
-const personalProjectsRoute = () => {
-  router.push({ name: 'Agregar proyecto personal' });
-}
-
-const browseProjects = () => {
-  router.push({ name: 'Explorar proyectos' });
-}
 
 </script>

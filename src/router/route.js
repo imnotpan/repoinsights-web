@@ -74,7 +74,10 @@ const routes = [
         path: "explore/:id",
         name: "Proyecto",
         component: () => import("@/views/explore/project.vue"),
-        props: true
+        props: true,
+        meta: {
+          hide: true,
+        },
       }
     ],
   },

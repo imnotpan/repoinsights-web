@@ -6,7 +6,7 @@
             <div class="text-xl font-semibold ml-4 text-primary-500">Cargando...</div>
         </div>
         <TabGroup>
-            <TabList class="mb-4 mt-7">
+            <TabList class="mb-4 mt-7 flex gap-2">
                 <Tab v-slot="{ selected }" as="template" v-for="(item, i) in dashs" :key="i" @click="selectedIndex = i">
                     <button :class="[
                         selected

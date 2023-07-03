@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia';
 
+import axiosClient from '@/plugins/axios';
+
 export const useUserStore = defineStore('user', {
     state: () => ({
         user: {
@@ -16,6 +18,7 @@ export const useUserStore = defineStore('user', {
             github_id: "",
         },
         token: "",
+        favoriteProjects: [],
     }),
 
     getters: {
@@ -49,7 +52,23 @@ export const useUserStore = defineStore('user', {
             this.token = ""
             localStorage.removeItem('token')
             localStorage.removeItem('user')
+        },
+
+        async sendInvitation() {
+                const response = await axiosClient.post('/api/metabase/invite/')
+                return response
+        },
+
+        async getMetabaseURL() {
+            const response = await axiosClient.get('/api/metabase/url/')
+            return response
+        },
+
+        async getFavoriteProjects() {
+            const response = await axiosClient.get('/api/repoinsights/projects/favorites/')
+            this.favoriteProjects = response.data.projects
         }
+
     },
 
 })
