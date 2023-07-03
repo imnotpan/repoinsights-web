@@ -4,7 +4,6 @@
         frameborder="0" 
         scrolling="no" 
         class="min-w-full w-[1px]" 
-        :class="$props.className"
         v-resize="{
             log: false,
         }"
@@ -20,10 +19,6 @@ const props = defineProps({
     src: {
         type: String,
         required: true
-    },
-    className: {
-        type: String,
-        default: ''
     }
 })
 
