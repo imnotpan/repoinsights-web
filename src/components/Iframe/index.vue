@@ -14,7 +14,7 @@
 
 <script setup>
 
-
+const emit = defineEmits(['load']);
 const props = defineProps({
     src: {
         type: String,
@@ -24,5 +24,6 @@ const props = defineProps({
 
 const handleLoad = () => {
     console.log('El iframe ha terminado de cargar');
+    emit('load');
   };
 </script>
