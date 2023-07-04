@@ -12,6 +12,7 @@
                     <h4 class="text-primary-500 font-medium text-base flex gap-1">
                         <div class="underline font-normal">{{ project.owner_name }}</div>/<div class="underline ">{{
                             project.name }}</div>
+                            <div>{{ project.private ? "🔒" : "" }}</div>
                     </h4>
                 </router-link>
             </div>
