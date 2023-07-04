@@ -1,9 +1,11 @@
 <template>
     <div>
         <div v-if="loading"
-            class="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center bg-white z-50">
-            <div class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-primary-500"></div>
-            <div class="text-xl font-semibold ml-4 text-primary-500">Cargando...</div>
+            class="absolute m-0 top-0 left-0 w-full h-full flex flex-col items-center justify-center overflow-hidden bg-white z-50">
+            <div class=" h-screen w-full absolute top-0 left-0  flex flex-col items-center justify-center">
+                <div class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-primary-500"></div>
+                <div class="text-xl font-semibold ml-4 text-primary-500">Cargando...</div>
+            </div>
         </div>
         <TabGroup>
             <TabList class="mb-4 mt-7 flex gap-2">
@@ -33,7 +35,7 @@ import Iframe from '@/components/Iframe/index.vue'
 import { ref } from 'vue';
 
 const allLoaded = ref([]);
-const loading = ref(true); // Nueva referencia
+const loading = ref(true);
 
 const props = defineProps({
     dashboards: {

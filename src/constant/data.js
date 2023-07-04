@@ -9,12 +9,22 @@ export const menuItems = [
     link: "home",
   },
   {
+    title: "Explorar repositorios",
+    icon: "heroicons-outline:search",
+    link: "Explorar proyectos",
+  },
+  {
     title: "Comparar repositorios",
     icon: "heroicons-outline:chart-pie",
     link: "dashboard",
   },
   {
-    title: "Repositorios favoritos",
+    title: "Agregar repositorio personal",
+    icon: "heroicons-outline:plus-circle",
+    link: "Agregar proyecto personal",
+  },
+  {
+    title: "Mis repositorios",
     icon: "heroicons-outline:star",
     link: "my-dashboard",
   },
@@ -22,7 +32,12 @@ export const menuItems = [
     title: "Analítica avanzada",
     icon: "heroicons-outline:chart-square-bar",
     link: "metabase",
-  }
+  },
+  {
+    title: "Contribuir",
+    icon: "heroicons-outline:sparkles",
+    link: "contribuir",
+  },
 ];
 
 export const ProfileMenu = [

@@ -63,7 +63,7 @@ const routes = [
       {
         path: "add-project",
         name: "Agregar proyecto personal",
-        component: () => import("@/views/home/projects.vue")
+        component: () => import("@/views/home/project/index.vue"),
       },
       {
         path: "explore",
@@ -78,6 +78,11 @@ const routes = [
         meta: {
           hide: true,
         },
+      },
+      {
+        path: "contribuir",
+        name: "contribuir",
+        component: () => import("@/views/contribute/index.vue"),
       }
     ],
   },

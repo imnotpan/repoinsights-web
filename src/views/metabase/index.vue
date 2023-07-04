@@ -8,7 +8,7 @@
                         Metabase</h1>
                     <p class="text-sm text-slate-600 w-2/3 m-auto">Herramienta de BI en donde podrás utilizar toda la
                         información de los repositorios publicos</p>
-                    <div class="my-4">
+                    <div v-if="metabaseURL" class="my-4">
                         <p @click="copyToClipboard(metabase.name)"
                             class="cursor-pointer flex justify-center align-center items-center mb-1">
                             <span class="font-semibold">Usuario: </span>
@@ -27,9 +27,13 @@
                             iconPosition="right" text="Ir a Metabase" btnClass="btn-primary py-2 normal-case" />
                     </a>
                 </Card>
+                <span>
+                    <a href="https://www.metabase.com/docs/latest/" class="hover:underline hover:text-slate-600 py-2"
+                        target="_blank" rel="noopener noreferrer">Documentación</a>
+                    </span>
+                </div>
             </div>
         </div>
-    </div>
 </template>
 
 <script setup>

@@ -20,7 +20,7 @@ export const useExploreStore = defineStore({
         searchTimeout: null,
         sortFilters: [],
         sortActiveFilter: null,
-        sortDirection: "desc"
+        sortDirectionInverted: false
     }),
 
     actions: {
@@ -100,6 +100,7 @@ export const useExploreStore = defineStore({
             this.loading.projects = true;
             const { data } = await axiosClient.get("/api/repoinsights/explore", { params });
             this.projects = data;
+            this.sortByFilter(params.sort);
             this.loading.projects = false;
             this.originalProjects = { ...data };
         },
@@ -122,29 +123,37 @@ export const useExploreStore = defineStore({
             this.loading.sort = false;
         },
 
-        async sortByFilter(filter, order = "desc") {
-            if ((filter === this.sortActiveFilter) || (filter === undefined)) {
-                return
+        async sortByFilter(filter) {
+            if (!filter) {
+                console.log('no filter or same filter');
+                return;
             }
-            this.addParamToUrl("sort", filter);
-            this.sortActiveFilter = !filter ? this.sortActiveFilter : filter;
+
+            const sortFilter = this.sortFilters.find(sortFilter => sortFilter.id === filter);
+
+            if (!sortFilter) {
+                console.log('no sort filter found');
+                return;
+            }
+            this.sortDirectionInverted = false
+            this.sortActiveFilter = filter;
             this.loading.projects = true;
-            await new Promise(resolve => {
-                setTimeout(() => {
-                    this.projects.data.sort((a, b) => {
-                        const ratingA = a.rating.find(rating => rating.id === filter);
-                        const ratingB = b.rating.find(rating => rating.id === filter);
+            this.addParamToUrl('sort', filter);
 
-                        const valueA = ratingA ? ratingA.value : 0;
-                        const valueB = ratingB ? ratingB.value : 0;
+            const extractValue = (rating) => {
+                const ratingValue = rating.find(rating => rating.id === filter);
+                return ratingValue ? ratingValue.value : sortFilter.invert ? Number.MAX_SAFE_INTEGER : Number.MIN_SAFE_INTEGER;
+            };
 
-                        return order === "desc" ? valueB - valueA : valueA - valueB;
-                    });
-                    resolve();
-                }, 0);
+            this.projects.data.sort((a, b) => {
+                const valueA = extractValue(a.rating);
+                const valueB = extractValue(b.rating);
+                return sortFilter.invert ? valueA - valueB : valueB - valueA;
             });
+
             this.loading.projects = false;
         },
+
 
         async sortByOrder(order) {
             this.loading.projects = true;

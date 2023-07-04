@@ -1,18 +1,16 @@
 <template>
-    <div class="flex justify-between py-2">
+    <div 
+        class="flex justify-between p-2 border-b hover:bg-slate-100 cursor-pointer"
+        @click="redirectToProject(project.id)"
+        >
         <div class="flex gap-4 items-start">
-            <span class="p-1 bg-slate-700 text-white leading-none rounded text-xs w-[26px] text-center">{{ indexPlusOne }}</span>
+            <span class="p-1 bg-slate-900 text-white leading-none rounded text-xs w-[26px] text-center">{{ indexPlusOne }}</span>
             <div>
                 <p class="text-base font-semibold leading-none capitalize">{{ project.name }}</p>
                 <p class="text-xs leading-none">{{ project.owner_name }}</p>
             </div>
         </div>
-        <button 
-            class="text-xs font-semibold"
-            @click="redirectToProject(project.id)"
-        >
-            Ver
-        </button>
+        <button class="text-xs font-semibold">Ver</button>
     </div>
 </template>
 

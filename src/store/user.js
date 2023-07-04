@@ -66,7 +66,7 @@ export const useUserStore = defineStore('user', {
 
         async getFavoriteProjects() {
             const response = await axiosClient.get('/api/repoinsights/projects/favorites/')
-            this.favoriteProjects = response.data.projects
+            this.favoriteProjects = response.data
         }
 
     },
