@@ -17,11 +17,10 @@
                             </div>
                         </div>
                         <div @click="selectRepo(repo)" class="cursor-pointer">
-                            <Badge v-if="repo.added && repo.loading === false" label="Eliminar"
+                            <Badge v-if="repo.added" label="Eliminar"
                                 badgeClass="bg-red-400 text-white !font-normal" />
-                            <Badge v-else-if="!repo.added && repo.loading === false" label="Agregar"
-                                badgeClass="bg-blue-400 text-white !font-normal" />
-                            <SimpleLoader v-else />
+                            <Badge v-else-if="!repo.added" label="Agregar"
+                                badgeClass="border border-primary-500 text-primary-500 !font-normal hover:bg-primary-100 !rounded-sm" />
                         </div>
                     </div>
                 </template>
@@ -35,8 +34,6 @@
                 <p class="text-base">Tokens disponibles para extraer la información de tu repositorio</p>
             </div>
             <div v-if="tokens.length > 0">
-                <!-- <vue-good-table :columns="tokensColumns" :rows="tokens" compactMode /> -->
-                <!-- simple table  -->
                 <table class="w-full text-sm">
                     <thead class="bg-gray-50 dark:bg-gray-800">
                         <tr>
@@ -71,6 +68,27 @@
                 </div>
             </form>
         </Modal>
+
+        <WarningModal 
+            v-model="projectModal" 
+            @validate="submitProject"
+            title="¿Estas seguro de agregar el repositorio?"
+            btnText="Si, deseo extraer la información de mi repositoio">
+                <p class="mb-2">Al aceptar se extraerá la información de tu repositorio y se creará un proyecto en la plataforma. Si tu
+                    proyecto es privado, <span class="font-semibold">tu información no será mostrada a los demás
+                        usuarios.</span></p>
+                <p class="mb-2">Para aceptar escribe <span class="font-bold">{{ confirmationText }}</span> en el campo de abajo. </p>
+                <input 
+                    type="text" 
+                    class="w-full py-2 px-1 rounded border border-gray-300 focus:border-primary-500 focus:ring-0"
+                    :class="{ '!border-red-500': validationError }"
+                    placeholder="Nombre del proyecto" 
+                    v-model="confirmAddProject" 
+                    @keyup.enter="submitProject"
+                    @input="validationError = false"
+                />
+                <small v-if="validationError" class="text-red-500 active:!border-red-500">Vuelve a intenrarlo</small>
+        </WarningModal>
     </div>
 </template>
 
@@ -79,51 +97,74 @@ import Textinput from "@/components/Textinput";
 import Button from "@/components/Button";
 import { useField, useForm } from "vee-validate"
 import * as yup from "yup";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useUserStore } from "@/store/user";
 import SimpleLoader from "@/components/Loader/simpleLoader.vue"
 import { useToast } from 'vue-toastification';
 import Card from "@/components/Card"
 import axiosClient from "@/plugins/axios";
-import Modal from "@/components/Modal";
+import Modal from "@/components/Modal/index.vue";
 import Badge from "@/components/Badge";
 
 import Pagination from "@/components/Navigation/pagination.vue"
+import WarningModal from "@/components/Modal/Warning.vue";
 
 
 const userStore = useUserStore();
 const toast = useToast();
 
+
 const username = userStore.user?.name;
 
 const repositories = ref([])
+const selectedRepo = ref({})
 const pagination = ref({})
 const tokens = ref([])
 const show = ref(false)
+
+const projectModal = ref(false)
+const confirmAddProject = ref("")
+const validationError = ref(false)
 
 const schema = yup.object({
     token: yup.string().required()
 });
 
 const selectRepo = (repo) => {
-    if (repo.loading === false && repo.added === false) {
-        repo.loading = !repo.loading;
-        axiosClient.post("api/github/projects/add", {
-            id: repo.id,
-            url: repo.url,
-            name: repo.name
-        }).then((response) => {
-            repo.added = true
-            repo.loading = false
-            toast.success(`${repo.name} agregado con éxito!`)
-        }).catch((error) => {
-            console.log(error)
-            repo.loading = false
-            toast.error(`Error al agregar ${repo.name}`)
-        })
+    if (repo.added === false) {
+        projectModal.value = true
+        selectedRepo.value = repo
+        console.log(repo)
     }
 
 }
+
+const submitProject = () => {
+    const validResponse = confirmAddProject.value === confirmationText.value
+    if (validResponse) {
+        axiosClient.post("api/github/projects/add", {
+            id: selectedRepo.value.id,
+            url: selectedRepo.value.url,
+            name: selectedRepo.value.name,
+            owner: selectedRepo.value.owner,
+        }).then((response) => {
+            selectedRepo.value.added = true
+            toast.success(`${selectedRepo.value.name} agregado con éxito!`)
+        }).catch((error) => {
+            console.log(error)
+            toast.error(`Error al agregar ${selectedRepo.value.name}`)
+        }).finally(() => {
+            projectModal.value = false
+            confirmAddProject.value = ""
+        })
+    }
+    else{
+        toast.error("Texto de confirmación incorrecto")
+        validationError.value = true
+        
+    }
+}
+
 
 const { handleSubmit, values } = useForm({
     validationSchema: schema,
@@ -184,6 +225,10 @@ const toLocalDate = (date) => {
     const format = "dd/MM/yyyy"
     return new Date(date).toLocaleDateString("es-ES", { format })
 }
+
+const confirmationText = computed(() => {
+    return `${username}/${selectedRepo.value.name}`
+})
 
 onMounted(async () => {
     Promise.all([getUserData(), getTokensData()])
