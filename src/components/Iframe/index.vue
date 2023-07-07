@@ -2,10 +2,11 @@
     <iframe 
         :src="src" 
         frameborder="0" 
-        scrolling="no" 
-        class="min-w-full w-[1px]" 
+        class="min-w-full w-[1px] min-h-0" 
+        scrolling="no"
         v-resize="{
             log: false,
+            autoResize: true
         }"
         @load="handleLoad"
     >
