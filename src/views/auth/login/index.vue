@@ -4,8 +4,8 @@
             <div class="left-column relative z-[1]">
                 <div class="max-w-[520px] pt-20 ltr:pl-20 rtl:pr-20">
                     <router-link to="/">
-                        <img :src="logo" alt="" class="mb-10" v-if="!this.$store.themeSettingsStore.isDark" />
-                        <img :src="logoWhite" alt="" class="mb-10" v-else />
+                        <!-- <img :src="logo" alt="" class="mb-10" v-if="!this.$store.themeSettingsStore.isDark" /> -->
+                        <!-- <img :src="logoWhite" alt="" class="mb-10" v-else /> -->
                     </router-link>
 
                     <h4>
