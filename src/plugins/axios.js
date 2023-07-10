@@ -4,7 +4,7 @@ import { useUserStore } from '@/store/user';
 
 const axiosClient = axios.create({
   // if VITE_DEV_SERVER_URL is not defined, it will use the default value
-  baseURL: import.meta.env.VITE_DEV ?  'http://localhost:8000' : 'http://146.83.216.228:8000'
+  baseURL: import.meta.env.VITE_DEV ?  'http://localhost:8000' : 'https://backend.repoinsights.app'
 });
 
 axiosClient.interceptors.request.use((config) => {
