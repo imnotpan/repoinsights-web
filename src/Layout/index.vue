@@ -40,7 +40,9 @@
         >
           <Breadcrumbs v-if="!this.$route.meta.hide" />
           <router-view v-slot="{ Component }">
-              <component :is="Component"></component>
+              <component 
+                :is="Component"
+                ></component>
           </router-view>
         </div>
       </div>

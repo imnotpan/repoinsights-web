@@ -1,6 +1,6 @@
 <template>
     <a :href="loginUrl"
-        class="inline-flex items-center min-h-40px font-sans text-sm text-white bg-gray-800 dark:bg-gray-900 dark:text-gray-300 py-2 pl-0 pr-3">
+        class="inline-flex items-center min-h-40px font-sans text-base text-white bg-gray-800 dark:bg-gray-900 dark:text-gray-300 py-2 pl-0 pr-3">
         <svg height="18" viewBox="0 0 16 16" width="40px" style="fill:white;">
             <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38
                 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01

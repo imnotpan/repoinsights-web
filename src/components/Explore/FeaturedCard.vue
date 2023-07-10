@@ -1,11 +1,10 @@
 <template>
-    <router-link
-        class="col-span-4 hover:shadow-md hover:-translate-y-1 transition-all duration-300 lg:!h-fit" :to="{
-            name: 'Proyecto',
-            params: {
-                id: project.id
-            },
-        }">
+    <router-link class="col-span-4 hover:shadow-md hover:-translate-y-1 transition-all duration-300 lg:!h-fit" :to="{
+        name: 'Proyecto',
+        params: {
+            id: project.id
+        },
+    }">
         <Card>
             <div class="flex gap-2 justify-between">
                 <div class="flex gap-2">
@@ -18,14 +17,14 @@
                         <h5 class="pname">{{ project.name }}</h5>
                     </div>
                 </div>
-                <!-- <LikeStar :project="project" @starClicked="handleSelect" className="!text-2xl" /> -->
             </div>
             <span class="description my-2">
                 <span class="font-medium">Última actualización:</span> {{ toLocalDate(project.last_extraction_date) }}
-                <span class="font-medium">Lenguaje:</span> {{ project.language }}</span>
+                <span class="font-medium">Lenguaje:</span> {{ project.language }}
+            </span>
             <ul class="w-full">
-                <template v-for="rating in project.rating" :key="rating.id">
-                    <li class="border-y py-2">
+                <template v-for="(rating, index) in project.rating" :key="rating.id">
+                    <li class="border-b py-2" :class="index === project.rating.length - 1 ? 'border-none' : ''">
                         <RatingData :rating=rating.rating :text=rating.name :value=rating.value size="xs"
                             :measure="rating.measurement" :showValue=rating.show_value />
                     </li>
