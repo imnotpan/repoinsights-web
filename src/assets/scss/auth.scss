@@ -8,12 +8,12 @@
   .lg-inner-column {
     height: 100vh;
     height: calc(var(--vh, 1vh) * 100);
-    @apply overflow-y-auto flex flex-wrap w-full;
+    @apply overflow-y-auto flex flex-wrap w-full bg-slate-50;
   }
   .left-column {
-    @apply bg-slate-100 dark:bg-slate-900  lg:block hidden flex-1 overflow-hidden;
+    @apply  dark:bg-slate-900  lg:block hidden flex-1 overflow-hidden;
     h4 {
-      @apply text-[40px] leading-[48px] text-slate-600 dark:text-slate-400;
+      @apply text-[40px] text-slate-600 dark:text-slate-400;
     }
   }
   .right-column {
@@ -25,9 +25,9 @@
 }
 
 .auth-box {
-  @apply max-w-[524px] md:px-[42px] md:py-[44px] p-7  mx-auto w-full;
+  @apply max-w-[524px] md:px-[42px] md:py-[44px] p-7  mx-auto w-full bg-white dark:bg-slate-800 rounded-md shadow-base2;
   h4 {
-    @apply text-2xl text-slate-900 dark:text-white mb-3;
+    @apply text-4xl text-slate-900 dark:text-white mb-3;
   }
 }
 .auth-box2 {

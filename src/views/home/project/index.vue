@@ -211,8 +211,8 @@ const getUserData = (async () => {
         repositories.value = response.data.projects
         pagination.value = response.data.pagination
     } catch (error) {
-        console.error('Error obteniendo proyectos del usuario', error);
-        toast.error("Error obteniendo proyectos del usuario")
+        console.error('Error obteniendo repositorios del usuario', error);
+        toast.error("Error obteniendo repositorios del usuario")
     }
 })
 

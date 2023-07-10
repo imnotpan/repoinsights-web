@@ -1,5 +1,5 @@
 <template>
-    <h1 class="mb-8 text-2xl text-center">Proyectos destacados</h1>
+    <h1 class="mb-8 text-2xl text-center">Repositorios destacados</h1>
     <div class="featured grid grid-cols-12 gap-4 pb-5 lg:w-3/4 mx-auto">
         <div v-if="store.loading.featured" v-for="index in 3" :key="index" class="col-span-4">
             <SkeletonLoader :number=1 :vertical=true :height=226 />
@@ -96,7 +96,7 @@ const updateUserProjects = async (project) => {
         await store.getFilters(params)
     }
     catch (error) {
-        toast.error("Ocurrió un error al actualizar los proyectos del usuario")
+        toast.error("Ocurrió un error al actualizar los repositorios del usuario")
     }
 }
 

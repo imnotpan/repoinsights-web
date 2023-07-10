@@ -24,11 +24,6 @@ export const menuItems = [
     link: "Agregar proyecto personal",
   },
   {
-    title: "Mis repositorios",
-    icon: "heroicons-outline:star",
-    link: "my-dashboard",
-  },
-  {
     title: "Analítica avanzada",
     icon: "heroicons-outline:chart-square-bar",
     link: "metabase",

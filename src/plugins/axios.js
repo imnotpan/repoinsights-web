@@ -21,14 +21,15 @@ axiosClient.interceptors.response.use(
   },
   (error) => {
     console.log(error);
+    const userStore = useUserStore();
     if (error.response.status === 401) {
-      const userStore = useUserStore();
       userStore.setToken(null);
-      router.push({ name: 'login' });
+      router.push({ name: 'Login' });
     }
     else if (error.response.status === 403) {
       console.log('TODO');
-      router.push({ name: '403' });
+      userStore.setToken(null);
+      router.push({ name: 'Login' });
     }
     throw error;
   },
