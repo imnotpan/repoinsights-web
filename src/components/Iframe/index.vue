@@ -5,10 +5,13 @@
         class="min-w-full w-[1px] min-h-0" 
         scrolling="no"
         v-resize="{
-            log: false,
-            autoResize: true,
-            checkOrigin: false,
-            heightCalculationMethod: 'taggedElement',
+            log: true,
+            onResize: () => {
+                console.log('El iframe ha cambiado de tamaño');
+            },
+            onResizeEnd: () => {
+                console.log('El iframe ha terminado de cambiar de tamaño');
+            }
         }"
         @load="handleLoad"
     >
