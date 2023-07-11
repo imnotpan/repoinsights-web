@@ -1,6 +1,6 @@
 <template>
     <div class="w-5/6 m-auto">
-        <!-- <img src="@/assets/images/metabase/logo.svg" class="m-auto my-5" width="80" /> -->
+        <img src="@/assets/images/metabase/logo.svg" class="m-auto my-5" width="80" />
         <div class="relative">
             <div className="text-center w-3/4 m-auto">
                 <Card bodyClass="py-8 px-10 ">
