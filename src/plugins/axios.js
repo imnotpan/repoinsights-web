@@ -27,7 +27,6 @@ axiosClient.interceptors.response.use(
       router.push({ name: 'Login' });
     }
     else if (error.response.status === 403) {
-      console.log('TODO');
       userStore.setToken(null);
       router.push({ name: 'Login' });
     }

@@ -4,7 +4,6 @@
 
 <script setup>
 import { onMounted } from 'vue';
-import axiosClient from '@/plugins/axios.js';
 import { useUserStore } from '@/store/user'; 
 import { useToast } from 'vue-toastification';
 import { useRouter } from 'vue-router';
@@ -25,18 +24,16 @@ onMounted(async () => {
 
   if ( params.token ) {
     console.log(params.token);
-    // parse json to get user data
     const user = JSON.parse(params.user)
     const token = params.token
     userStore.setToken(token);
     userStore.setUser(user);
     router.push({ name: 'Layout' });
-
-    
   }
+
   else{
     toast.error('Invalid token');
-    router.push({ name: 'login' });
+    window.location.href = '/';
   }
 
 });
