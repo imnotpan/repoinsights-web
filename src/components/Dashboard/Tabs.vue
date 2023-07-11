@@ -17,20 +17,25 @@
 
             <div class="relative">
                 <div v-if="loading">
-                    <div class=" h-64 w-full absolute top-0 left-0  flex flex-col items-center justify-center bg-white">
+                    <div class="h-64 w-full absolute top-0 left-0 flex flex-col items-center justify-center bg-white">
                         <div class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-primary-500"></div>
                         <div class="text-xl font-semibold ml-4 text-primary-500">Estamos cargando la información...</div>
                     </div>
                 </div>
                 <div :class="{ 'absolute top-0 left-0': loading }">
                     <Iframe v-for="(item, i) in dashboards" :key="`iframe-${i}`" :src="item.iframe"
-                        :class="{ 'absolute top-[-9999px] left-[-9999px]': i !== selectedIndex, 'w-full h-full': i === selectedIndex }"
+                        :class="[
+                            'w-full h-full',
+                            {'hidden': i !== selectedIndex},
+                            {'h-0 w-0': i !== selectedIndex && !loading}
+                        ]"
                         @load="handleLoad" />
                 </div>
             </div>
         </TabGroup>
     </div>
 </template>
+
   
 <script setup>
 import { TabGroup, TabList, Tab } from "@headlessui/vue";
