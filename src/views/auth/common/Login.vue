@@ -77,7 +77,8 @@ const onSubmit = async () => {
     }
     catch (error) {
         console.log(error)
-        toast.error('Hubo un error')
+        toast.error('Usuario o contraseña incorrectos')
+        loginForm.value.password = ''
     }
 }
 
