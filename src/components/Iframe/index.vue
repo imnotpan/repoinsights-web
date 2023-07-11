@@ -5,13 +5,8 @@
         class="min-w-full w-[1px] min-h-0" 
         scrolling="no"
         v-resize="{
-            log: true,
-            onResize: () => {
-                console.log('El iframe ha cambiado de tamaño');
-            },
-            onResizeEnd: () => {
-                console.log('El iframe ha terminado de cambiar de tamaño');
-            }
+            log: false,
+            autoResize: true
         }"
         @load="handleLoad"
     >
@@ -19,7 +14,7 @@
 </template>
 
 <script setup>
-import { getCurrentInstance, onMounted } from 'vue';
+import { getCurrentInstance } from 'vue';
 
 const emit = defineEmits(['load']);
 const props = defineProps({
@@ -41,10 +36,4 @@ const isSameOrigin = () => {
 
     return currentOrigin === iframeOrigin;
 };
-
-onMounted(() => {
-    if (isSameOrigin()) {
-        console.log('El iframe es del mismo origen');
-    }
-});
 </script>
