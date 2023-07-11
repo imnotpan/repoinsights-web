@@ -6,9 +6,7 @@
         scrolling="no"
         v-resize="{
             log: false,
-            autoResize: true,
-            checkOrigin: false,
-            heightCalculationMethod: 'taggedElement',
+            autoResize: true
         }"
         @load="handleLoad"
     >
@@ -16,7 +14,7 @@
 </template>
 
 <script setup>
-import { getCurrentInstance, onMounted } from 'vue';
+import { getCurrentInstance } from 'vue';
 
 const emit = defineEmits(['load']);
 const props = defineProps({
@@ -38,10 +36,4 @@ const isSameOrigin = () => {
 
     return currentOrigin === iframeOrigin;
 };
-
-onMounted(() => {
-    if (isSameOrigin()) {
-        console.log('El iframe es del mismo origen');
-    }
-});
 </script>
