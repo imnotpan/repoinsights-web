@@ -91,7 +91,7 @@ const handleFilterClicked = async () => {
 const updateUserProjects = async (project) => {
     try {
         await store.updateUserProject(project)
-        toast.success("Proyecto actualizado correctamente", { timeout: 1500 })
+        toast.success("Repositorio seleccionado correctamente", { timeout: 1500 })
         const params = store.getUrlParams()
         await store.getFilters(params)
     }
