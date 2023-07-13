@@ -1,5 +1,6 @@
 <template>
     <div class="grid grid-cols-1 md:grid-cols-1 gap-4">
+        <Summary v-if="!summary.loading" :data="summary.data" />
         <Card v-if="project">
             <div>
                 <div>
@@ -49,16 +50,15 @@ import axiosClient from '@/plugins/axios';
 
 import Tabs from '@/components/Dashboard/Tabs.vue'
 import Card from '@/components/Card/index.vue'
+import Summary from '@/components/Summary/index.vue'
 
 let store = useExploreStore();
 const project = ref(null)
 const dashboards = ref([])
-
-const showCard = ref(false)
-
-const toggleCard = () => {
-    showCard.value = !showCard.value
-}
+const summary = ref({
+    loading: true,
+    data: []
+})
 
 const props = defineProps({
     id: {
@@ -70,6 +70,12 @@ const props = defineProps({
 const getDashboard = async () => {
     const { data } = await axiosClient.post('/api/metabase/public/dashboards/single/', { "params": { "id": props.id } })
     dashboards.value = data.dashboards;
+}
+
+const getSummary = async () => {
+    const { data } = await axiosClient.get('/api/repoinsights/summary')
+    summary.value.data = data;
+    summary.value.loading = false;
 }
 
 const toLocalDate = (date) => {
@@ -93,7 +99,8 @@ const calculateHTMLUrl = (project) => {
 onMounted(async () => {
     Promise.all([
         project.value = await store.getProject(props.id),
-        await getDashboard()
+        await getDashboard(),
+        await getSummary()
     ])
 })
 
