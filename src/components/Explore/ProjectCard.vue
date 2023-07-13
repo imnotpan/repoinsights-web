@@ -2,8 +2,15 @@
     <Card className="my-5 lg:!h-fit">
         <div class="flex mb-1 justify-between">
             <div class="flex gap-4 items-center">
-                <LikeStar :project="project" @starClicked="handleSelect" />
-                <router-link :to="{
+                <LikeStar 
+                    :project="project" 
+                    @starClicked="handleSelect"
+                    :disabled="project.empty"
+                />
+
+                <router-link
+                    :class="{ 'disabled': project.empty }"
+                    :to="{
                     name: 'Proyecto',
                     params: {
                         id: project.id
@@ -37,7 +44,10 @@
             </p>
         </div>
         <hr class="my-4" />
-        <div class="flex gap-8">
+        <div v-if="project.empty" class="text-left">
+            <p class="text-sm text-secondary-600 font-semibold">No se encontraron datos para este repositorio</p>
+        </div>
+        <div v-else class="flex gap-8">
             <template v-for="rating in project.rating" :key="rating.id">
                 <RatingData :rating="rating.rating" :text="rating.name" :value="rating.value" :type=2 size="xs"
                     :measure="rating.measurement" :showValue=rating.show_value />
@@ -52,19 +62,18 @@ import Card from "@/components/Card";
 import RatingData from "@/components/Explore/RatingData";
 import LikeStar from "./LikeStar.vue";
 
-
-const githubUrl = (project) => {
-    return `https://www.github.com/${project.owner_name}/${project.name}`
-}
-
 const emit = defineEmits(["selectedProject"])
-
 const props = defineProps({
     project: {
         type: Object,
         required: true
     }
 })
+
+
+const githubUrl = (project) => {
+    return `https://www.github.com/${project.owner_name}/${project.name}`
+}
 
 const toLocalDate = (date) => {
     const d = new Date(date);
@@ -77,3 +86,11 @@ const handleSelect = (project) => {
 }
 
 </script>
+
+<style scoped>
+.disabled {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.5;
+}
+</style>

@@ -1,6 +1,10 @@
 <template>
     <div>
-        <Icon 
+        <div v-if="disabled" class="text-lg text-primary-500 cursor-pointer" >
+
+        </div>
+        <Icon
+            v-else
             :icon="selectedProject(project)" 
             class="text-lg text-primary-500 cursor-pointer" 
             @click="starClick(project)" 
@@ -24,6 +28,10 @@ const props = defineProps({
     className: {
         type: String,
         default: ''
+    },
+    disabled: {
+        type: Boolean,
+        default: false
     }
 })
 
