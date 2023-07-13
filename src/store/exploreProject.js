@@ -135,7 +135,7 @@ export const useExploreStore = defineStore({
                 console.log('no sort filter found');
                 return;
             }
-            this.sortDirectionInverted = false
+            this.sortDirectionInverted = sortFilter.invert;
             this.sortActiveFilter = filter;
             this.loading.projects = true;
             this.addParamToUrl('sort', filter);
@@ -158,6 +158,7 @@ export const useExploreStore = defineStore({
         async sortByOrder(order) {
             this.loading.projects = true;
             this.loading.sort = true;
+            
             await new Promise(resolve => {
                 setTimeout(() => {
                     this.projects.data.reverse();
