@@ -2,28 +2,37 @@
     <div v-if="type == 1" class="flex w-full justify-between">
         <span :class=[sizeClasses[size].text]>{{ text }}</span>
         <div class="flex gap-2">
-            <span v-if="showValue"  class="font-medium" :class="[sizeClasses[size].value]">{{ roundValue(value) }}<small>{{ measure
+            <span v-if="showValue" class="font-medium" :class="[sizeClasses[size].value]">{{ roundValue(value) }}<small>{{
+                measure
             }}</small></span>
             <Rating :rating="rating" :size=sizeClasses[size].circle :text=sizeClasses[size].circleText />
         </div>
     </div>
 
     <div v-else-if="type == 2" class="leading-none text-center">
-        <div class="flex gap-2 justify-center">
-            <Rating :rating="rating" :size=sizeClasses[size].circle :text=sizeClasses[size].circleText :measure="measure" />
-            <span v-if="showValue" class="font-medium" :class="[sizeClasses[size].value]">{{ roundValue(value) }}<small>{{
-                measuremnts[measurement] ? measuremnts[measurement] : measure
-            }}</small></span>
+        <div :class="{ 
+            'opacity-50': id !== store.sortActiveFilter && store.sortActiveFilter !== null,
+            }">
+            <div class="flex gap-2 justify-center">
+                <Rating :rating="rating" :size=sizeClasses[size].circle :text=sizeClasses[size].circleText
+                    :measure="measure" />
+
+                <span v-if="showValue" class="font-medium" :class="[sizeClasses[size].value]">{{ roundValue(value)
+                }}<small>{{
+    measuremnts[measurement] ? measuremnts[measurement] : measure
+}}</small></span>
+            </div>
+            <span :class=[sizeClasses[size].text]>
+                {{ text }}
+            </span>
         </div>
-        <span :class=[sizeClasses[size].text]>
-            {{ text }}
-        </span>
 
     </div>
 </template>
 
 <script setup>
 import Rating from "@/components/Rating";
+import { useExploreStore } from "@/store/exploreProject";
 import { onMounted, ref } from "vue";
 
 const sizeClasses = {
@@ -53,8 +62,14 @@ const measuremnts = {
     '%': '%'
 }
 
+const store = useExploreStore()
+
 const measurement = ref('')
 const props = defineProps({
+    id: {
+        type: String,
+        required: false
+    },
     type: {
         type: Number,
         required: false,

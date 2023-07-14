@@ -20,7 +20,9 @@ export const useExploreStore = defineStore({
         searchTimeout: null,
         sortFilters: [],
         sortActiveFilter: null,
-        sortDirectionInverted: false
+        sortDirectionInverted: false,
+        disableOpacity: false,
+        showEmptyProjects: true
     }),
 
     actions: {
@@ -125,7 +127,9 @@ export const useExploreStore = defineStore({
 
         async sortByFilter(filter) {
             if (!filter) {
-                console.log('no filter or same filter');
+                this.sortActiveFilter = null;
+                this.removeParamFromUrl('sort');
+
                 return;
             }
 
@@ -151,6 +155,12 @@ export const useExploreStore = defineStore({
                 return sortFilter.invert ? valueA - valueB : valueB - valueA;
             });
 
+
+            if (!this.showEmptyProjects) {
+                this.filterEmptyProjects();
+            }
+
+
             this.loading.projects = false;
         },
 
@@ -158,7 +168,7 @@ export const useExploreStore = defineStore({
         async sortByOrder(order) {
             this.loading.projects = true;
             this.loading.sort = true;
-            
+
             await new Promise(resolve => {
                 setTimeout(() => {
                     this.projects.data.reverse();
@@ -175,7 +185,33 @@ export const useExploreStore = defineStore({
             const urlParams = new URLSearchParams(window.location.search);
             urlParams.set(key, value);
             window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
+        },
+
+        removeParamFromUrl(key) {
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.delete(key);
+            window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
+            if (urlParams.toString().length === 0) {
+                window.history.replaceState({}, '', `${window.location.pathname}`);
+            }
+        },
+
+        filterEmptyProjects() {
+            this.showEmptyProjects = !this.showEmptyProjects;
+            if (this.showEmptyProjects) {
+                this.projects = { ...this.originalProjects };
+            } else {
+                this.projects.data = this.projects.data.filter(project => {
+                    const rating = project.rating.find(rating => rating.id === this.sortActiveFilter);
+                    if (rating) {
+                        return true;
+                    }
+                    return false;
+                });
+            }
+            this.projects.total = this.projects.data.length;
         }
+
 
     }
 });
