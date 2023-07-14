@@ -37,10 +37,17 @@
         </div>
         <div class="col-span-8">
             <div class="flex justify-between">
-                <SearchBar placeholder="Buscar proyectos..." @search="store.filterProjects" />
+                <SearchBar placeholder="Buscar repositorios..." @search="store.filterProjects" />
                 <div class="flex gap-2 relative">
-                    <p><span class="font-medium">{{ store.projects.total }}</span> proyectos</p>
-                    <SimpleSelector 
+                    <ButtonWithHelp
+                        v-if="store.sortActiveFilter"
+                        :icon="store.showEmptyProjects ? 'heroicons-outline:eye' : 'heroicons-outline:eye-off'"
+                        :msg=tooltipMsg
+                        @click="handleShowProjectsEmpty"
+
+                    />
+                    
+                    <SortSelector 
                         :options="store.sortFilters" 
                         @change="handleChangeSortFilter" 
                         @changeOrder="handleSortOrder"
@@ -49,6 +56,8 @@
                     />
                 </div>
             </div>
+            <p class="text-right py-2"><span class="font-medium">{{ store.projects.total }}</span> repositorios</p>
+
             <template v-if="store.loading.projects">
                 <SkeletonLoader :height=160 className="p-6 my-5" :number=10 />
             </template>
@@ -62,20 +71,23 @@
   
 <script setup>
 
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 
 import Card from "@/components/Card";
 import SkeletonLoader from "@/components/Skeleton/index";
+import Icon from "@/components/Icon";
 
 import SearchBar from "@/components/Explore/SearchBar";
 import ProjectCard from "@/components/Explore/ProjectCard";
 import FeaturedCard from "@/components/Explore/FeaturedCard";
 import Filter from "@/components/Explore/Filter";
 
-import SimpleSelector from "@/components/Select/SimpleSelector";
+import SortSelector from "@/components/Select/SortSelector";
+import ButtonWithHelp from "@/components/Button/ButtonWithHelp.vue";
 
 import { useToast } from 'vue-toastification';
 import { useExploreStore } from "@/store/exploreProject";
+import { tooltip } from "leaflet";
 
 const toast = useToast();
 let store = useExploreStore();
@@ -89,9 +101,14 @@ const handleFilterClicked = async () => {
 }
 
 const updateUserProjects = async (project) => {
+    const msgs = {
+        add: "Repositorio agregado correctamente",
+        remove: "Repositorio removido correctamente"
+    }
+    const msg = project.selected ? msgs.add : msgs.remove
     try {
         await store.updateUserProject(project)
-        toast.success("Repositorio seleccionado correctamente", { timeout: 1500 })
+        toast.success(msg)
         const params = store.getUrlParams()
         await store.getFilters(params)
     }
@@ -108,14 +125,22 @@ const cleanFilters = async () => {
 };
 
 const handleChangeSortFilter = async (option) => {
-    store.sortByFilter(option.id);
+    const selectedSortOption = option ? option.id : null
+    store.sortByFilter(selectedSortOption);
 }
 
 const handleSortOrder = async (order) => {
-    console.log(order)
     store.sortDirection = order
     store.sortByOrder(order)
 }
+
+const handleShowProjectsEmpty = () => {
+    store.filterEmptyProjects()
+}
+
+const tooltipMsg = computed(() => {
+    return store.showEmptyProjects ? "Ocultar repositorios sin datos" : "Mostrar repositorios sin datos"
+})
 
 onMounted(async () => {
     await Promise.all([store.loadData(), store.getFeaturedProjects()])

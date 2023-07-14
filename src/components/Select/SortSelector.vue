@@ -1,19 +1,22 @@
 <template>
-    <div class="w-48 flex gap-2 items-center">
+    <div class="flex gap-2 items-center">
         <select
-            class="w-full py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"
+            class="w-full h-full cursor-pointer py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"
             name="filter" :value="selectedOption" @change="handleChange">
             <option value="">Ordenar por</option>
             <option v-for="(option, index) in options" :value="option.id" :key="option.id">
                 {{ option.name }}
             </option>
         </select>
-        <button class="bg-white rounded-md focus:ring-1 !border-gray-300 h-full">
+        <button class="bg-white rounded-md focus:ring-1 border border-gray-300 h-full px-2">
             <div @click="toggleOrder" class="flex items-center gap-1">
-                <div
-                    :class="{ 'rotate-icon-180': store.sortDirectionInverted, 'rotate-icon-0': !store.sortDirectionInverted }">
-                    <Icon icon="heroicons-outline:arrow-up" class="text-2xl" />
+                <div>
+                    <Icon 
+                        :icon="store.sortDirectionInverted ? 'fa:sort-numeric-asc' : 'fa:sort-numeric-desc'"
+                        class="text-xl" 
+                    />
                 </div>
+                <span class="text-lg">{{ orderText }}</span>
             </div>
         </button>
     </div>
@@ -24,6 +27,7 @@
 
 import { useExploreStore } from "@/store/exploreProject";
 import { Icon } from '@iconify/vue';
+import { computed } from "vue";
 
 const store = useExploreStore();
 const emit = defineEmits(['change', 'changeOrder']);
@@ -42,10 +46,15 @@ const props = defineProps({
     }
 })
 
+const orderText = computed(() => {
+    return store.sortDirectionInverted ? 'Ascendente' : 'Descendente'
+})
+
+
 const handleChange = (event) => {
     const selectedOptionId = event.target.value
-    const selectedOption = props.options.find(option => option.id === selectedOptionId);
-    if (selectedOption) emit('change', selectedOption);
+    const selectedOption = props.options.find(option => option.id === selectedOptionId)
+    emit('change', selectedOption);
 }
 
 const toggleOrder = () => {

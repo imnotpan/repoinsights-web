@@ -16,8 +16,8 @@
                         id: project.id
                     }
                 }">
-                    <h4 class="text-primary-500 font-medium text-base flex gap-1">
-                        <div class="underline font-normal">{{ project.owner_name }}</div>/<div class="underline ">{{
+                    <h4 class="text-primary-500 font-medium text-base flex gap-1 underline">
+                        <div class="font-normal">{{ project.owner_name }}</div>/<div class="">{{
                             project.name }}</div>
                             <div>{{ project.private ? "🔒" : "" }}</div>
                     </h4>
@@ -49,8 +49,15 @@
         </div>
         <div v-else class="flex gap-8">
             <template v-for="rating in project.rating" :key="rating.id">
-                <RatingData :rating="rating.rating" :text="rating.name" :value="rating.value" :type=2 size="xs"
-                    :measure="rating.measurement" :showValue=rating.show_value />
+                <RatingData 
+                    :rating="rating.rating" 
+                    :text="rating.name" 
+                    :value="rating.value" 
+                    :type=2 
+                    size="xs"
+                    :id=rating.id
+                    :measure="rating.measurement" 
+                    :showValue=rating.show_value />
             </template>
         </div>
     </Card>
