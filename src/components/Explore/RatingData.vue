@@ -10,17 +10,19 @@
     </div>
 
     <div v-else-if="type == 2" class="leading-none text-center">
-        <div :class="{ 
-            'opacity-50': id !== store.sortActiveFilter && store.sortActiveFilter !== null,
-            }">
+        <div 
+            class="p-1 rounded-sm border border-transparent"
+            :class="{ 
+                ' border-primary-400': id === store.sortActiveFilter && store.sortActiveFilter !== null,
+                [id]: true
+                 }">
             <div class="flex gap-2 justify-center">
                 <Rating :rating="rating" :size=sizeClasses[size].circle :text=sizeClasses[size].circleText
                     :measure="measure" />
 
-                <span v-if="showValue" class="font-medium" :class="[sizeClasses[size].value]">{{ roundValue(value)
-                }}<small>{{
-    measuremnts[measurement] ? measuremnts[measurement] : measure
-}}</small></span>
+                <span v-if="showValue" class="font-medium" :class="[sizeClasses[size].value]">{{ roundValue(value) }}
+                    <small>{{ measuremnts[measurement] ? measuremnts[measurement] : measure }}</small>
+                </span>
             </div>
             <span :class=[sizeClasses[size].text]>
                 {{ text }}
@@ -124,3 +126,9 @@ onMounted(() => {
 
 
 </script>
+
+<style scoped>
+.hovered:hover {
+    border-color: #e2e8f0;
+}
+</style>
