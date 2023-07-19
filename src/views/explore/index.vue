@@ -37,16 +37,8 @@
         </div>
         <div class="col-span-8">
             <div class="flex justify-between">
-                <SearchBar placeholder="Buscar repositorios..." @search="store.filterProjects" />
+                <SearchBar placeholder="Buscar repositorios..." @search="store.searchProjects" />
                 <div class="flex gap-2 relative">
-                    <ButtonWithHelp
-                        v-if="store.sortActiveFilter"
-                        :icon="store.showEmptyProjects ? 'heroicons-outline:eye' : 'heroicons-outline:eye-off'"
-                        :msg=tooltipMsg
-                        @click="handleShowProjectsEmpty"
-
-                    />
-                    
                     <SortSelector 
                         :options="store.sortFilters" 
                         @change="handleChangeSortFilter" 
@@ -126,21 +118,13 @@ const cleanFilters = async () => {
 
 const handleChangeSortFilter = async (option) => {
     const selectedSortOption = option ? option.id : null
-    store.sortByFilter(selectedSortOption);
+    store.sortByFilter(store.projects.data, selectedSortOption);
 }
 
 const handleSortOrder = async (order) => {
     store.sortDirection = order
     store.sortByOrder(order)
 }
-
-const handleShowProjectsEmpty = () => {
-    store.filterEmptyProjects()
-}
-
-const tooltipMsg = computed(() => {
-    return store.showEmptyProjects ? "Ocultar repositorios sin datos" : "Mostrar repositorios sin datos"
-})
 
 onMounted(async () => {
     await Promise.all([store.loadData(), store.getFeaturedProjects()])
