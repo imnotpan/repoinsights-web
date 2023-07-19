@@ -2,10 +2,10 @@
   <div class="search-bar flex items-center">
     <div class="px-2 py-1 rounded-md border border-gray-300 flex items-center" :class="{ 'border-blue-500': isFocused }">
       <Icon icon="heroicons-outline:search" class="search-icon" />
-      <input type="text" v-model="searchTerm" :placeholder="placeholder" @input="handleInput" @focus="isFocused = true"
+      <input type="text" v-model="store.searchTerm" :placeholder="placeholder" @input="handleInput" @focus="isFocused = true"
         @blur="isFocused = false" class="bg-transparent focus:outline-none" />
 
-      <Icon :style="{ visibility: searchTerm.length > 0 ? 'visible' : 'hidden' }" icon="heroicons-outline:x-mark"
+      <Icon :style="{ visibility: store.searchTerm.length > 0 ? 'visible' : 'hidden' }" icon="heroicons-outline:x-mark"
         class="search-icon rounded-full border p-1 text-xs cursor-pointer" @click="cleanSearchTerm" transition="fade" />
 
     </div>
@@ -13,8 +13,9 @@
 </template>
   
 <script setup>
-import { defineProps, ref } from 'vue';
+import { defineProps, ref, watch } from 'vue';
 import Icon from "@/components/Icon";
+import { useExploreStore } from "@/store/exploreProject";
 
 const props = defineProps({
   placeholder: {
@@ -23,18 +24,18 @@ const props = defineProps({
   },
 });
 const emit = defineEmits()
-
-
-const searchTerm = ref('');
+const store = useExploreStore();
 const isFocused = ref(false);
 
-const handleInput = () => {
-  emit('search', searchTerm.value);
-};
+
+watch(() => store.searchTerm, (newValue, oldValue) => {
+  if (newValue !== oldValue) {
+    emit('search', newValue);
+  }
+});
 
 const cleanSearchTerm = () => {
-  console.log('cleanSearchTerm');
-  searchTerm.value = '';
+  store.searchTerm = '';
   emit('search', '');
 };
 

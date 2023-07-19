@@ -17,6 +17,7 @@ export const useExploreStore = defineStore({
             featured: true,
             sort: true
         },
+        searchTerm: "",
         searchTimeout: null,
         sortFilters: [],
         sortActiveFilter: null,
@@ -37,41 +38,33 @@ export const useExploreStore = defineStore({
             return data;
         },
 
-        filterBySearch(projects, search) {
-            const searchTerm = search.toLowerCase();
-            const filteredProjects = projects.filter((project) => {
-                const projectName = project.name.toLowerCase();
-                const ownerName = project.owner_name.toLowerCase();
-                return projectName.includes(searchTerm) || ownerName.includes(searchTerm);
-            });
-            this.projects = { ...this.projects, data: filteredProjects, total: filteredProjects.length };
-
-        },
-
-        filterProjects(search) {
+        searchProjects(search) {
             if (this.searchTimeout) {
                 clearTimeout(this.searchTimeout);
             }
 
             this.searchTimeout = setTimeout(() => {
-                if (search === null ) {
-                    console.log('empty search');
-                    this.projects = { ...this.projects, data: this.originalProjects.data, total: this.originalProjects.length };
-                }
-                else if (search.length === 0 ) {
-                    console.log('empty search, reset projects');
-                    this.projects = { ...this.projects, data: this.originalProjects.data, total: this.originalProjects.data.length };
-                }
-                else {
-                        console.log('searching');
-                        this.filterBySearch(this.originalProjects.data, search);
+                if (search === "") {
+                    this.getProjectsFromOriginal();
+                    return;
                 }
 
+                const searchTerm = search.toLowerCase();
+                let filteredProjects = this.originalProjects.data.filter((project) => {
+                    const projectName = project.name.toLowerCase();
+                    const ownerName = project.owner_name.toLowerCase();
+                    return (projectName.includes(searchTerm) || ownerName.includes(searchTerm)) && this.checkHasRating(project);
+                });
+
+                filteredProjects = this.sortByFilter(filteredProjects, this.sortActiveFilter);
+    
+                this.projects = { ...this.projects, data: filteredProjects, total: filteredProjects.length };
             }, 300);
         },
 
 
         async loadData() {
+            this.searchTerm = "";
             const params = this.getUrlParams();
             await Promise.all([
                 this.getFilters(params),
@@ -115,8 +108,8 @@ export const useExploreStore = defineStore({
         async getProjects(params) {
             this.loading.projects = true;
             const { data } = await axiosClient.get("/api/repoinsights/explore", { params });
-            this.projects = data;
-            this.sortByFilter(params.sort);
+            const sortedProjects = this.sortByFilter(data.data, params.sort);
+            this.projects = { ...sortedProjects, data: sortedProjects, total: sortedProjects.length };
             this.loading.projects = false;
             this.originalProjects = { ...data };
         },
@@ -139,59 +132,58 @@ export const useExploreStore = defineStore({
             this.loading.sort = false;
         },
 
-        async sortByFilter(filter) {
+        sortByFilter(projects, filter) {
             if (!filter) {
-                this.sortActiveFilter = null;
                 this.removeParamFromUrl('sort');
-
-                return;
+                console.log('order by DEFAULT -> last_extraction_date');
             }
-
-            const sortFilter = this.sortFilters.find(sortFilter => sortFilter.id === filter);
-
-            if (!sortFilter) {
-                console.log('no sort filter found');
-                return;
+            else{
+                this.addParamToUrl('sort', filter);
             }
-            this.sortDirectionInverted = sortFilter.invert;
+        
             this.sortActiveFilter = filter;
-            this.loading.projects = true;
-            this.addParamToUrl('sort', filter);
-
-            const extractValue = (rating) => {
-                const ratingValue = rating.find(rating => rating.id === filter);
-                return ratingValue ? ratingValue.value : sortFilter.invert ? Number.MAX_SAFE_INTEGER : Number.MIN_SAFE_INTEGER;
+        
+            const extractValue = (item) => {
+                if (!filter) {
+                    return new Date(item.last_extraction_date)
+                }
+                const ratingValue = item.rating.find(rating => rating.id === filter);
+                return ratingValue ? ratingValue.value : null;
             };
-
-            this.projects.data.sort((a, b) => {
-                const valueA = extractValue(a.rating);
-                const valueB = extractValue(b.rating);
-                return sortFilter.invert ? valueA - valueB : valueB - valueA;
+            
+            return projects.sort((a, b) => {
+                const valueA = extractValue(a);
+                const valueB = extractValue(b);
+                if (valueA === null && valueB === null) { return 0; }
+                if (valueA === null) { return 1; }
+                if (valueB === null) { return -1; }
+                const order = this.sortDirectionInverted ? valueA - valueB : valueB - valueA;
+                return order;
             });
-
-
-            if (!this.showEmptyProjects) {
-                this.filterEmptyProjects();
-            }
-
-
-            this.loading.projects = false;
         },
-
+        
 
         async sortByOrder() {
             this.loading.sort = true;
-
             await new Promise(resolve => {
                 setTimeout(() => {
-                    this.projects.data.reverse();
+                    if ( !this.sortActiveFilter ) {
+                        console.log('order by DEFAULT -> last_extraction_date');
+                        this.projects.data.reverse();
+                    }
+                    else{
+                        const emptyProjects = this.getEmptyProjects(this.projects.data);
+                        const nonEmptyProjects = this.getNonEmptyProjects(this.projects.data);
+                        nonEmptyProjects.reverse();
+                        const orderedProjects = [...nonEmptyProjects, ...emptyProjects];
+                        this.projects = { ...this.projects, data: orderedProjects };
+                    }
                     resolve();
                 }, 0);
             });
             this.loading.sort = false;
 
         },
-
 
         addParamToUrl(key, value) {
             const urlParams = new URLSearchParams(window.location.search);
@@ -208,22 +200,34 @@ export const useExploreStore = defineStore({
             }
         },
 
-        filterEmptyProjects() {
-            this.showEmptyProjects = !this.showEmptyProjects;
-            if (this.showEmptyProjects) {
-                this.projects = { ...this.originalProjects };
-            } else {
-                this.projects.data = this.projects.data.filter(project => {
-                    const rating = project.rating.find(rating => rating.id === this.sortActiveFilter);
-                    if (rating) {
-                        return true;
-                    }
-                    return false;
-                });
+        checkHasRating(project) {
+            if ( !this.sortActiveFilter ) {
+                return true;
             }
-            this.projects.total = this.projects.data.length;
-        }
+            const hasRating = project.rating.find(rating => rating.id === this.sortActiveFilter);
+            return hasRating ? true : false;
+        },
 
+        getNonEmptyProjects(projects) {
+            return projects.filter(project => {
+                return this.checkHasRating(project);
+            });
+        },
+        getEmptyProjects(projects) {
+            return projects.filter(project => {
+                return !this.checkHasRating(project);
+            });
+        },
+
+        getProjectsFromOriginal() {
+            const nonEmptyProjects = this.getNonEmptyProjects(this.originalProjects.data);
+            const emptyProjects = this.getEmptyProjects(this.originalProjects.data);
+
+            const orderedProjects = [...nonEmptyProjects, ...emptyProjects];
+            this.projects = { ...this.projects, data: orderedProjects, total: orderedProjects.length };
+
+            this.projects.data = this.sortByFilter(this.projects.data, this.sortActiveFilter);
+        }
 
     }
 });

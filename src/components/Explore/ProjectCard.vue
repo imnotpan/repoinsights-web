@@ -83,6 +83,8 @@ const githubUrl = (project) => {
 }
 
 const toLocalDate = (date) => {
+    if (date == null) return "Error";
+    
     const d = new Date(date);
     return d.toLocaleDateString();
 }

@@ -3,7 +3,7 @@
         <select
             class="w-full h-full cursor-pointer py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"
             name="filter" :value="selectedOption" @change="handleChange">
-            <option value="">Ordenar por</option>
+            <option value="">Última actualización</option>
             <option v-for="(option, index) in options" :value="option.id" :key="option.id">
                 {{ option.name }}
             </option>
