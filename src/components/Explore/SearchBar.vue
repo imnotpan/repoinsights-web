@@ -29,12 +29,7 @@ const searchTerm = ref('');
 const isFocused = ref(false);
 
 const handleInput = () => {
-  if (searchTerm.value.length >= 3) {
-    emit('search', searchTerm.value);
-  }
-  else {
-    emit('search', '');
-  }
+  emit('search', searchTerm.value);
 };
 
 const cleanSearchTerm = () => {

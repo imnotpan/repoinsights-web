@@ -37,22 +37,36 @@ export const useExploreStore = defineStore({
             return data;
         },
 
+        filterBySearch(projects, search) {
+            const searchTerm = search.toLowerCase();
+            const filteredProjects = projects.filter((project) => {
+                const projectName = project.name.toLowerCase();
+                const ownerName = project.owner_name.toLowerCase();
+                return projectName.includes(searchTerm) || ownerName.includes(searchTerm);
+            });
+            this.projects = { ...this.projects, data: filteredProjects, total: filteredProjects.length };
+
+        },
+
         filterProjects(search) {
             if (this.searchTimeout) {
                 clearTimeout(this.searchTimeout);
             }
+
             this.searchTimeout = setTimeout(() => {
-                if (search === null || search.length === 0) {
-                    this.projects = { ...this.originalProjects };
-                } else {
-                    const searchTerm = search.toLowerCase();
-                    const filteredProjects = this.projects.data.filter((project) => {
-                        const projectName = project.name.toLowerCase();
-                        const ownerName = project.owner_name.toLowerCase();
-                        return projectName.includes(searchTerm) || ownerName.includes(searchTerm);
-                    });
-                    this.projects = { ...this.projects, data: filteredProjects, total: filteredProjects.length };
+                if (search === null ) {
+                    console.log('empty search');
+                    this.projects = { ...this.projects, data: this.originalProjects.data, total: this.originalProjects.length };
                 }
+                else if (search.length === 0 ) {
+                    console.log('empty search, reset projects');
+                    this.projects = { ...this.projects, data: this.originalProjects.data, total: this.originalProjects.data.length };
+                }
+                else {
+                        console.log('searching');
+                        this.filterBySearch(this.originalProjects.data, search);
+                }
+
             }, 300);
         },
 
@@ -165,8 +179,7 @@ export const useExploreStore = defineStore({
         },
 
 
-        async sortByOrder(order) {
-            this.loading.projects = true;
+        async sortByOrder() {
             this.loading.sort = true;
 
             await new Promise(resolve => {
@@ -175,7 +188,6 @@ export const useExploreStore = defineStore({
                     resolve();
                 }, 0);
             });
-            this.loading.projects = false;
             this.loading.sort = false;
 
         },
