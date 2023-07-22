@@ -26,8 +26,10 @@
 import Card from "@/components/Card";
 import { ref } from "vue";
 import axiosClient from '@/plugins/axios';
+import { useToast } from 'vue-toastification';
 
 
+const toast = useToast();
 const repositoryURL = ref(null)
 
 const addRepository = async () => {
@@ -36,8 +38,10 @@ const addRepository = async () => {
             url: repositoryURL.value
         })
         console.log(data)
+        toast.success('Repositorio agregado correctamente')
     } catch (error) {
         console.log(error)
+        toast.error(error.response.data.error)
     }
     repositoryURL.value = null
     

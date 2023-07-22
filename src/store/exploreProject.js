@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import axiosClient from "@/plugins/axios";
+import { type } from '@amcharts/amcharts5';
 
 
 export const useExploreStore = defineStore({
@@ -74,6 +75,10 @@ export const useExploreStore = defineStore({
         },
 
         async getFeaturedProjects() {
+            if ( this.featuredProjects.length > 0 ) {
+                return;
+            }
+
             this.loading.featured = true;
             const { data } = await axiosClient.get("/api/repoinsights/explore/featured/");
             this.featuredProjects = data.projects;
@@ -106,12 +111,32 @@ export const useExploreStore = defineStore({
         },
 
         async getProjects(params) {
-            this.loading.projects = true;
-            const { data } = await axiosClient.get("/api/repoinsights/explore", { params });
-            const sortedProjects = this.sortByFilter(data.data, params.sort);
+            let response_data = null;
+            console.log({
+                params: Object.keys(params).length,
+                originalProjects: this.originalProjects.data?.length
+            })
+
+            if ( Object.keys(params).length === 0 && Object.keys(this.originalProjects).length > 0 ) {
+                console.log('no params and originalProjects.data > 0');
+                response_data = { ...this.originalProjects}
+            }
+
+            else{
+                console.log('params or originalProjects.data = 0');
+                this.loading.projects = true;
+                const { data } = await axiosClient.get("/api/repoinsights/explore", { params });
+                this.loading.projects = false;
+                response_data = data
+                if ( Object.keys(this.originalProjects).length === 0 ) {
+                    this.originalProjects = data;
+                }
+
+            }
+            console.log('response_data', response_data);
+            const sortedProjects = this.sortByFilter(response_data.data, params.sort);
             this.projects = { ...sortedProjects, data: sortedProjects, total: sortedProjects.length };
             this.loading.projects = false;
-            this.originalProjects = { ...data };
         },
 
         async updateUserProject(project) {
