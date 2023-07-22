@@ -1,7 +1,5 @@
 import { defineStore } from 'pinia';
 import axiosClient from "@/plugins/axios";
-import { type } from '@amcharts/amcharts5';
-
 
 export const useExploreStore = defineStore({
     id: 'explore',
