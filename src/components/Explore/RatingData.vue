@@ -5,20 +5,25 @@
             <span v-if="showValue" class="font-medium" :class="[sizeClasses[size].value]">{{ roundValue(value) }}<small>{{
                 measure
             }}</small></span>
-            <Rating :rating="rating" :size=sizeClasses[size].circle :text=sizeClasses[size].circleText />
+            <template v-if="rating">
+                <Rating :rating="rating" :size=sizeClasses[size].circle :text=sizeClasses[size].circleText />
+            </template>
         </div>
     </div>
 
     <div v-else-if="type == 2" class="leading-none text-center">
-        <div 
-            class="p-1 rounded-sm border border-transparent"
-            :class="{ 
-                ' border-primary-400': id === store.sortActiveFilter && store.sortActiveFilter !== null,
-                [id]: true
-                 }">
+        <div class="p-1 rounded-sm border border-transparent" :class="{
+            ' border-primary-400': id === store.sortActiveFilter && store.sortActiveFilter !== null,
+            [id]: true
+        }">
             <div class="flex gap-2 justify-center">
-                <Rating :rating="rating" :size=sizeClasses[size].circle :text=sizeClasses[size].circleText
-                    :measure="measure" />
+                <template v-if="rating">
+
+                    <Rating :rating="rating" :size=sizeClasses[size].circle :text=sizeClasses[size].circleText
+                        :measure="measure" />
+
+                </template>
+
 
                 <span v-if="showValue" class="font-medium" :class="[sizeClasses[size].value]">{{ roundValue(value) }}
                     <small>{{ measuremnts[measurement] ? measuremnts[measurement] : measure }}</small>
@@ -123,7 +128,6 @@ const roundValue = (value) => {
 onMounted(() => {
     measurement.value = props.measure
 })
-
 
 </script>
 

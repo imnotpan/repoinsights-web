@@ -20,14 +20,14 @@
           <Icon icon="heroicons:chevron-right" />
         </span>
       </li>
-      <li class="text-primary-500">
+      <!-- <li class="text-primary-500">
         <button type="button" class="capitalize">
           {{ this.$route.meta.groupParent }}
         </button>
         <span class="breadcrumbs-icon rtl:transform rtl:rotate-180">
           <Icon icon="heroicons:chevron-right" />
         </span>
-      </li>
+      </li> -->
       <li class="capitalize text-slate-500 dark:text-slate-400">
         {{ this.$route.name.replace("-", " ") }}
       </li>
