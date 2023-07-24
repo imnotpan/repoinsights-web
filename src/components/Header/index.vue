@@ -7,7 +7,7 @@
       ${
         this.$store.themeSettingsStore.menuLayout === 'horizontal' && window.width > 1280
           ? 'py-1'
-          : 'md:py-6 py-3'
+          : 'md:py-4 py-3'
       }
       `"
     >
@@ -30,7 +30,8 @@
               v-if="this.$store.themeSettingsStore.direction"
             />
           </button>
-          <MobileLogo v-if="window.width < 1280" />
+          <handle-mobile-menu v-if="window.width < 768" />
+          <MobileLogo v-if="window.width > 768" />
           <handle-mobile-menu
             v-if="window.width < 1280 && window.width > 768"
           />
@@ -51,9 +52,7 @@
         <div
           class="nav-tools flex items-center lg:space-x-6 space-x-3 rtl:space-x-reverse"
         >
-          <!-- <SwitchDark /> -->
-          <Profile v-if="window.width > 768" />
-          <handle-mobile-menu v-if="window.width < 768" />
+          <Profile />
         </div>
       </div>
     </div>
@@ -116,6 +115,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .floating .app-header {
-  @apply md:mx-6 md:my-8 mx-[15px] my-[15px] rounded-md;
+  @apply md:mx-6 md:my-2 mx-[15px] my-[15px] rounded-md;
 }
 </style>

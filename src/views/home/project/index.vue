@@ -6,7 +6,11 @@
                 <p class="text-base">Repositorios de {{ username }}</p>
             </div>
             <div class="min-h-[300px]">
-                <template v-for="repo in repositories" :key="repo.id" @click="selectRepo(repo)">
+                <div v-if="repositories.length === 0">
+                    <Skeleton :number=5 />
+                </div>
+
+                <template v-else v-for="repo in repositories" :key="repo.id" @click="selectRepo(repo)">
                     <div class="flex justify-between my-3 pb-3 border-b">
                         <div class="flex trunc gap-4">
                             <div>
@@ -105,6 +109,7 @@ import Card from "@/components/Card"
 import axiosClient from "@/plugins/axios";
 import Modal from "@/components/Modal/index.vue";
 import Badge from "@/components/Badge";
+import Skeleton from "@/components/Skeleton"
 
 import Pagination from "@/components/Navigation/pagination.vue"
 import WarningModal from "@/components/Modal/Warning.vue";

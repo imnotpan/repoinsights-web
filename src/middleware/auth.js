@@ -8,7 +8,6 @@ export default async function auth({ next }) {
     if (userStore.favoriteProjects.length === 0) {
       await userStore.getFavoriteProjects();
     }
-    console.log(userStore.favoriteProjects)
     return next();
   }
   return next({ name: "Login" });

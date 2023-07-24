@@ -5,7 +5,7 @@
         <div class="lg:h-8 lg:w-8 h-7 w-7 rounded-full">
           <img
             :src= "userAvatar"
-            alt=""
+            alt="useravatar"
             class="block w-full h-full object-cover rounded-full"
           />
         </div>
