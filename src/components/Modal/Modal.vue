@@ -186,6 +186,7 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    showHeader:{}
   },
 
   setup(props) {
@@ -197,6 +198,7 @@ export default defineComponent({
     };
     // close
     const closeModal = () => {
+      console.log("close");
       isOpen.value = false;
     };
 

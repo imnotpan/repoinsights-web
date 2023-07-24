@@ -19,7 +19,7 @@
   </template>
   
   <script setup>
-  import { defineProps, ref } from 'vue';
+  import { ref } from 'vue';
   import Icon from '@/components/Icon';
   
   const props = defineProps({

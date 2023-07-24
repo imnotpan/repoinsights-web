@@ -18,7 +18,6 @@ const routes = [
     name: "AuthCallback",
     component: () => import("@/views/auth/common/callback.vue"),
   },
-
   {
     path: "/app",
     name: "Layout",

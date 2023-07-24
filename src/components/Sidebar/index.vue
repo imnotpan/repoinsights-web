@@ -30,55 +30,6 @@
         
         `"
       >
-        <router-link
-          :to="{ name: 'home' }"
-          v-if="
-            !this.$store.themeSettingsStore.sidebarCollasp ||
-            this.$store.themeSettingsStore.isMouseHovered
-          "
-        >
-          <!-- <img
-            src="@/assets/images/logo/logo.svg"
-            alt=""
-            v-if="
-              !this.$store.themeSettingsStore.isDark &&
-              !this.$store.themeSettingsStore.semidark
-            "
-          /> -->
-
-          <!-- <img
-            src="@/assets/images/logo/logo-white.svg"
-            alt=""
-            v-if="
-              this.$store.themeSettingsStore.isDark ||
-              this.$store.themeSettingsStore.semidark
-            "
-          /> -->
-        </router-link>
-        <router-link
-          :to="{ name: 'home' }"
-          v-if="
-            this.$store.themeSettingsStore.sidebarCollasp &&
-            !this.$store.themeSettingsStore.isMouseHovered
-          "
-        >
-          <!-- <img
-            src="@/assets/images/logo/logo-c.svg"
-            alt=""
-            v-if="
-              !this.$store.themeSettingsStore.isDark &&
-              !this.$store.themeSettingsStore.semidark
-            "
-          /> -->
-          <!-- <img
-            src="@/assets/images/logo/logo-c-white.svg"
-            alt=""
-            v-if="
-              this.$store.themeSettingsStore.isDark ||
-              this.$store.themeSettingsStore.semidark
-            "
-          /> -->
-        </router-link>
         <span
           class="cursor-pointer text-slate-900 dark:text-white text-2xl"
           v-if="
@@ -90,8 +41,6 @@
               !this.$store.themeSettingsStore.sidebarCollasp
           "
         >
-          <!-- <Icon icon="heroicons-outline:menu-alt-3"
-        /> -->
           <div
             class="h-4 w-4 border-[1.5px] border-slate-900 dark:border-slate-700 rounded-full transition-all duration-150"
             :class="
@@ -115,17 +64,17 @@
           }
         "
       >
-        <Navmenu :items="menuItems" />
+      <Navmenu class="relative" :items="menuItems"  />
+      <SubMenu />
       </SimpleBar>
     </div>
   </div>
 </template>
 <script>
-// import { Icon } from "@iconify/vue";
 import { defineComponent } from "vue";
 import { menuItems } from "../../constant/data";
 import Navmenu from "./Navmenu";
-import { gsap } from "gsap";
+import SubMenu from "./SubMenu.vue";
 import { SimpleBar } from "simplebar-vue3";
 import { ref, onMounted } from "vue";
 
@@ -134,6 +83,7 @@ export default defineComponent({
     // Icon,
     Navmenu,
     SimpleBar,
+    SubMenu
   },
   data() {
     return {
