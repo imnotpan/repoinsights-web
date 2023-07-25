@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-row justify-center items-center gap-2 mb-4">
+    <div class="flex flex-row justify-center items-center gap-2 mb-8">
         <div v-for="letter in startLetters" :key="letter"
             class="cursor-pointer p-2 bg-gray-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-semibold text-sm rounded-md"
             :class="{ '!bg-slate-800 text-white': selectedLetter === letter }" @click="filterByLetter(letter)">
@@ -7,10 +7,10 @@
         </div>
     </div>
 
-    <div class="overflow-x-auto">
-        <table class="min-w-full table-auto border rounded-md">
+    <div class="overflow-x-auto w-10/12 m-auto">
+        <table class="min-w-full table-auto border rounded-md text-sm bg-gray-200">
             <thead class="justify-between">
-                <tr class="bg-gray-200">
+                <tr class="">
                     <th class="px-4 py-2">
                         <span class="text-slate-900">Nombre</span>
                     </th>
