@@ -1,16 +1,14 @@
 <template>
   <div>
     <h2 class="text-2xl mb-10">Bienvenido {{ username }} 👋</h2>
-    <div class="grid grid-cols-12 gap-10">
+    <div class="grid grid-cols-12 gap-y-10 md:gap-10">
       <CardHome title="Agrega tu repositorio personal" subtitle="Privado o publico" buttonText="Agregar"
         routeName="Agregar proyecto personal" />
       <CardHome title="Explorar repositorios" subtitle="Publicos" buttonText="Buscar" routeName="Explorar proyectos" />
-      <CardHome title="Pendiente" subtitle="Pendiente" buttonText="Buscar" routeName="Explorar proyectos" />
-      <div class="col-span-6">
+      <CardHome title="Comparar repositorios" subtitle="Privado o publico" buttonText="Buscar" routeName="dashboard" />
 
-      </div>
       <Card className="col-span-12 relative" v-if="userStore.favoriteProjects.projects.length > 0">
-        <div class="flex justify-between mb-4">
+        <div class="flex justify-between mb-4 overflow-auto">
           <h4 class="text-sm">Tus Proyectos seleccionados ({{ userStore.favoriteProjects.projects.length }})</h4>
           <router-link class="text-xs font-semibold text-slate-900" :to="{ name: 'Explorar proyectos' }">
             Ver todos los proyectos

@@ -7,7 +7,7 @@
       ${
         this.$store.themeSettingsStore.menuLayout === 'horizontal' && window.width > 1280
           ? 'py-1'
-          : 'md:py-6 py-3'
+          : 'md:py-4 py-3'
       }
       `"
     >
@@ -30,7 +30,8 @@
               v-if="this.$store.themeSettingsStore.direction"
             />
           </button>
-          <MobileLogo v-if="window.width < 1280" />
+          <handle-mobile-menu v-if="window.width < 768" />
+          <MobileLogo v-if="window.width > 768" />
           <handle-mobile-menu
             v-if="window.width < 1280 && window.width > 768"
           />
@@ -43,17 +44,10 @@
           <MobileLogo v-else />
           <handle-mobile-menu v-if="window.width < 1280" />
         </div>
-        <Mainnav
-          v-if="
-            this.$store.themeSettingsStore.menuLayout === 'horizontal' && window.width > 1280
-          "
-        />
         <div
           class="nav-tools flex items-center lg:space-x-6 space-x-3 rtl:space-x-reverse"
         >
-          <!-- <SwitchDark /> -->
-          <Profile v-if="window.width > 768" />
-          <handle-mobile-menu v-if="window.width < 768" />
+          <Profile />
         </div>
       </div>
     </div>
@@ -62,7 +56,6 @@
 <script>
 import Profile from "./Navtools/Profile.vue";
 import SwitchDark from "./Navtools/SwitchDark.vue";
-import Mainnav from "./horizental-nav.vue";
 import Icon from "../Icon";
 import Logo from "./Navtools/Logo.vue";
 import MobileLogo from "./Navtools/MobileLogo.vue";
@@ -74,7 +67,6 @@ export default {
   components: {
     Profile,
     SwitchDark,
-    Mainnav,
     Icon,
     Logo,
     MobileLogo,
@@ -116,6 +108,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .floating .app-header {
-  @apply md:mx-6 md:my-8 mx-[15px] my-[15px] rounded-md;
+  @apply md:mx-6 md:my-2 mx-[15px] my-[15px] rounded-md;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <Card className="col-span-4" bodyClass=" px-4 py-5">
+    <Card className="col-span-12 md:col-span-4" bodyClass=" px-4 py-5">
         <div class="mb-2">
             <span class="text-xs leading-none">{{ props.subtitle }}</span>
             <h4 class="text-sm leading-none">{{ props.title }}</h4>

@@ -110,28 +110,20 @@ export const useExploreStore = defineStore({
 
         async getProjects(params) {
             let response_data = null;
-            console.log({
-                params: Object.keys(params).length,
-                originalProjects: this.originalProjects.data?.length
-            })
+            this.loading.projects = true;
 
             if ( Object.keys(params).length === 0 && Object.keys(this.originalProjects).length > 0 ) {
-                console.log('no params and originalProjects.data > 0');
                 response_data = { ...this.originalProjects}
             }
 
             else{
-                console.log('params or originalProjects.data = 0');
-                this.loading.projects = true;
                 const { data } = await axiosClient.get("/api/repoinsights/explore", { params });
-                this.loading.projects = false;
                 response_data = data
                 if ( Object.keys(this.originalProjects).length === 0 ) {
                     this.originalProjects = data;
                 }
 
             }
-            console.log('response_data', response_data);
             const sortedProjects = this.sortByFilter(response_data.data, params.sort);
             this.projects = { ...sortedProjects, data: sortedProjects, total: sortedProjects.length };
             this.loading.projects = false;
@@ -158,7 +150,6 @@ export const useExploreStore = defineStore({
         sortByFilter(projects, filter) {
             if (!filter) {
                 this.removeParamFromUrl('sort');
-                console.log('order by DEFAULT -> last_extraction_date');
             }
             else{
                 this.addParamToUrl('sort', filter);
@@ -191,7 +182,6 @@ export const useExploreStore = defineStore({
             await new Promise(resolve => {
                 setTimeout(() => {
                     if ( !this.sortActiveFilter ) {
-                        console.log('order by DEFAULT -> last_extraction_date');
                         this.projects.data.reverse();
                     }
                     else{

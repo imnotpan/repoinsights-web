@@ -89,7 +89,6 @@ const updateUrlParams = () => {
 };
 
 const cleanFilters = () => {
-  console.log('cleaning filters');
   selectedOptions.value = [];
   updateUrlParams();
 };

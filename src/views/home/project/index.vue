@@ -1,12 +1,27 @@
 <template>
     <div class="grid grid-cols-12 gap-4">
         <Card className="col-span-6">
-            <div class="mb-6">
-                <p class="text-lg font-semibold text-slate-900 dark:text-white">Agrega tu repositorio privado</p>
-                <p class="text-base">Repositorios de {{ username }}</p>
+            <div class="flex flex-row justify-between">
+                <div class="mb-6">
+                    <p class="text-lg font-semibold text-slate-900 dark:text-white">Agrega tu repositorio privado</p>
+                    <p class="text-base">Repositorios de {{ username }}</p>
+                </div>
+                <div
+                    v-if="not_private_access"
+                >
+                    <ButtonWithHelp
+                        text="Repositorios privados"
+                        :link="private_route"
+                        msg="Debes solicitar acceso a tu repositorio privado para poder extraer la información"
+                    />
+                </div>
             </div>
             <div class="min-h-[300px]">
-                <template v-for="repo in repositories" :key="repo.id" @click="selectRepo(repo)">
+                <div v-if="repositories.length === 0">
+                    <Skeleton :number=5 />
+                </div>
+
+                <template v-else v-for="repo in repositories" :key="repo.id" @click="selectRepo(repo)">
                     <div class="flex justify-between my-3 pb-3 border-b">
                         <div class="flex trunc gap-4">
                             <div>
@@ -105,6 +120,8 @@ import Card from "@/components/Card"
 import axiosClient from "@/plugins/axios";
 import Modal from "@/components/Modal/index.vue";
 import Badge from "@/components/Badge";
+import Skeleton from "@/components/Skeleton"
+import ButtonWithHelp from "@/components/Button/ButtonWithHelp.vue";
 
 import Pagination from "@/components/Navigation/pagination.vue"
 import WarningModal from "@/components/Modal/Warning.vue";
@@ -125,6 +142,8 @@ const show = ref(false)
 const projectModal = ref(false)
 const confirmAddProject = ref("")
 const validationError = ref(false)
+const private_route = ref("")
+const not_private_access = ref(false)
 
 const schema = yup.object({
     token: yup.string().required()
@@ -164,7 +183,6 @@ const submitProject = () => {
         
     }
 }
-
 
 const { handleSubmit, values } = useForm({
     validationSchema: schema,
@@ -230,8 +248,20 @@ const confirmationText = computed(() => {
     return `${username}/${selectedRepo.value.name}`
 })
 
+const getPrivateRoute = (async () => {
+    const { data } = await axiosClient.get("api/social/private-route/")
+    private_route.value = data.auth_url
+})
+
+const privateAccess = (async () => {
+    const { data } = await axiosClient.get("api/github/projects/check-private/")
+    not_private_access.value = !data.private
+})
+
+
+
 onMounted(async () => {
-    Promise.all([getUserData(), getTokensData()])
+    Promise.all([getUserData(), getTokensData(), getPrivateRoute(), privateAccess()])
 })
 
 </script>

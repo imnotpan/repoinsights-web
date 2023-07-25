@@ -7,19 +7,6 @@
     }   `"
   >
     <div class="logo-segment flex justify-between items-center px-4 py-6">
-      <router-link :to="{ name: 'home' }">
-        <!-- <img
-          src="@/assets/images/logo/logo.svg"
-          alt=""
-          v-if="!this.$store.themeSettingsStore.isDark"
-        /> -->
-
-        <!-- <img
-          src="@/assets/images/logo/logo-white.svg"
-          alt=""
-          v-if="this.$store.themeSettingsStore.isDark"
-        /> -->
-      </router-link>
       <span
         class="cursor-pointer text-slate-900 dark:text-white text-2xl"
         @click="toggleMsidebar"
@@ -28,7 +15,9 @@
     </div>
 
     <div class="sidebar-menu px-4 h-[calc(100%-100px)]" data-simplebar>
-      <Navmenu :items="menuItems" />
+      <Navmenu :items="menuItems"  />
+      <SubMenu />
+
     </div>
   </div>
 </template>
@@ -37,13 +26,16 @@ import { Icon } from "@iconify/vue";
 import { defineComponent } from "vue";
 import { menuItems } from "../../constant/data";
 import Navmenu from "./Navmenu";
+import SubMenu from "./SubMenu.vue";
 import { useThemeSettingsStore } from "@/store/themeSettings";
+
 const themeSettingsStore = useThemeSettingsStore();
 
 export default defineComponent({
   components: {
     Icon,
     Navmenu,
+    SubMenu,
   },
   data() {
     return {

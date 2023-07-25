@@ -5,7 +5,7 @@
         <div class="lg:h-8 lg:w-8 h-7 w-7 rounded-full">
           <img
             :src= "userAvatar"
-            alt=""
+            alt="useravatar"
             class="block w-full h-full object-cover rounded-full"
           />
         </div>
@@ -50,7 +50,6 @@ import { MenuItem } from "@headlessui/vue";
 import Dropdown from "@/components/Dropdown";
 import Icon from "@/components/Icon";
 import { useUserStore } from "@/store/user";
-import { useRouter } from "vue-router";
 export default {
   components: {
     Icon,
@@ -61,8 +60,6 @@ export default {
     const userStore = useUserStore();
     const userAvatar = userStore.user?.avatar;
     const name = userStore.user?.name || userStore.user?.login || "";
-
-
     return {
       userAvatar,
       name,
@@ -101,4 +98,3 @@ export default {
   },
 };
 </script>
-<style lang=""></style>

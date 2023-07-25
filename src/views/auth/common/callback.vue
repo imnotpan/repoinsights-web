@@ -22,6 +22,12 @@ onMounted(async () => {
     params[name] = value;
   });
 
+
+  if ( params.error ) {
+    toast.error(params.error);
+    window.location.href = '/';
+  }
+
   if ( params.token ) {
     console.log(params.token);
     const user = JSON.parse(params.user)
