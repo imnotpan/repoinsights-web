@@ -33,7 +33,7 @@ export const useExploreStore = defineStore({
                     return originalProject;
                 }
             }
-            const { data } = await axiosClient.get(`/api/repoinsights/explore/${id}/`);
+            const { data } = await axiosClient.get(`/api/repoinsights/explore/${id}/`)
             return data;
         },
 
