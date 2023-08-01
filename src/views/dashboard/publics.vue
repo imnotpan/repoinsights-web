@@ -1,23 +1,18 @@
 <template>
-  <div v-if="serverError" class="w-full text-center">
-    <span class="text-xl font-bold dark:text-white text-slate-700">Ha ocurrido un problema...</span>
-  </div>
-
-  <div v-else>
-    <div class="col-span-4 fromGroup relative">
-      <span class="text-lg font-semibold">Repositorios disponibles ({{ projects.length }})</span>
-      <ChipGrid 
-        :projects="projects" 
-        v-model="selectedProjects" 
-        @chipClicked="handleSelectChange" 
-        />
+  <div class="container mx-auto px-4 max-w-6xl md:px-0">
+    <div v-if="serverError" class="w-full text-center">
+      <span class="text-xl font-bold dark:text-white text-slate-700">Ha ocurrido un problema...</span>
     </div>
-    <template v-if="dashboards.length > 0">
-      <Tabs :dashboards="dashboards" />
-    </template>
 
-
-
+    <div v-else>
+      <div class="col-span-4 fromGroup relative">
+        <span class="text-lg font-semibold">Repositorios disponibles ({{ projects.length }})</span>
+        <ChipGrid :projects="projects" v-model="selectedProjects" @chipClicked="handleSelectChange" />
+      </div>
+      <template v-if="dashboards.length > 0">
+        <Tabs :dashboards="dashboards" />
+      </template>
+    </div>
   </div>
 </template>
 

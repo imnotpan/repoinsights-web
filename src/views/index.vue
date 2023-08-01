@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container mx-auto px-4 max-w-screen-xl md:px-0">
     <h2 class="text-2xl mb-10">Bienvenido {{ username }} 👋</h2>
     <div class="grid grid-cols-12 gap-y-10 md:gap-10">
       <CardHome title="Agrega tu repositorio personal" subtitle="Privado o publico" buttonText="Agregar"

@@ -1,35 +1,38 @@
 <template>
-    <div class="flex flex-row justify-center items-center gap-2 mb-8">
-        <div v-for="letter in startLetters" :key="letter"
-            class="cursor-pointer p-2 bg-gray-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-semibold text-sm rounded-md"
-            :class="{ '!bg-slate-800 text-white': selectedLetter === letter }" @click="filterByLetter(letter)">
-            {{ letter }}
+    <div class="container mx-auto p-4 max-w-4xl md:px-0">
+        <div class="flex flex-row justify-center items-center gap-2 mb-8">
+            <div v-for="letter in startLetters" :key="letter"
+                class="cursor-pointer p-3 bg-gray-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-semibold text-sm rounded-md inline-block leading-none"
+                :class="{ '!bg-slate-800 text-white': selectedLetter === letter }" @click="filterByLetter(letter)">
+                {{ letter }}
+            </div>
         </div>
-    </div>
 
-    <div class="overflow-x-auto w-10/12 m-auto">
-        <table class="min-w-full table-auto border rounded-md text-sm bg-gray-200">
-            <thead class="justify-between">
-                <tr class="">
-                    <th class="px-4 py-2">
-                        <span class="text-slate-900">Nombre</span>
-                    </th>
-                    <th class="px-8 py-2">
-                        <span class="text-slate-900">Descripción</span>
-                    </th>
-                    <th class="px-8 py-2">
-                        <span class="text-slate-900">Objetivo</span>
-                    </th>
-                </tr>
-            </thead>
-            <tbody class="bg-gray-200">
-                <tr class="bg-white border-2 border-gray-200" v-for="metric in filteredMetrics" :key="metric.nombre">
-                    <td class="px-4 py-2 font-semibold">{{ metric.nombre }}</td>
-                    <td class="px-8 py-2">{{ metric.descripcion }}</td>
-                    <td class="px-8 py-2">{{ metric.objetivo }}</td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="overflow-x-auto m-auto">
+            <table class="rounded-md text-sm bg-gray-200">
+                <thead class="justify-between">
+                    <tr class="">
+                        <th class="px-4 py-2">
+                            <span class="text-slate-900">Nombre</span>
+                        </th>
+                        <th class="px-8 py-2">
+                            <span class="text-slate-900">Descripción</span>
+                        </th>
+                        <th class="px-8 py-2">
+                            <span class="text-slate-900">Objetivo</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-gray-200">
+                    <tr class="bg-white border-2 border-gray-200 hover:bg-gray-100"
+                    v-for="metric in filteredMetrics" :key="metric.nombre">
+                        <td class="px-4 py-2 font-semibold">{{ metric.nombre }}</td>
+                        <td class="px-8 py-2">{{ metric.descripcion }}</td>
+                        <td class="px-8 py-2">{{ metric.objetivo }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </template>
 
@@ -177,8 +180,6 @@ const filterByLetter = (letter) => {
 
 <style scoped lang="scss">
 table {
-
-    // first column width small
     td:first-child {
         width: 10%;
     }

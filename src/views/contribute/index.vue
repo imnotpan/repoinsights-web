@@ -1,16 +1,17 @@
 <template>
-    <div class="w-5/6 m-auto">
+    <div class="container mx-auto px-4 max-w-4xl md:px-0">
         <img src="@/assets/images/github/logo-black.svg" class="m-auto my-5" width="80" />
         <div class="relative">
             <div className="text-center w-3/4 m-auto">
-                <Card bodyClass="py-8 px-10 ">
+                <Card bodyClass="p-10 w-fit m-auto">
                     <h1 class="font-medium lg:text-2xl text-xl capitalize text-slate-900 inline-block mb-2">
                         Agrega un repositorio que te interese</h1>
-                    <p class="text-sm text-slate-600 w-2/3 m-auto">Si existe un proyecto que te interesa analizar, ingresa
+                    <p class="text-sm text-slate-600">Si existe un proyecto que te interesa analizar, ingresa
                         su URL</p>
                     <input 
                         type="url" 
-                        class="border border-gray-300 p-2 rounded-lg w-full my-6" 
+                        autofocus
+                        class="border border-slate-400 p-2 rounded-lg w- my-6 mt-8 w-full active:border-slate-800 focus:border-slate-800 focus:outline-none"
                         placeholder="https://github.com/memcached/memcached"
                         @keyup.enter="addRepository"
                         v-model="repositoryURL"

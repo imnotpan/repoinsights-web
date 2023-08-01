@@ -1,9 +1,5 @@
 <template>
-    <div v-if="loadingData">
-        <SimpleLoader />
-    </div>
-
-    <div v-else class="grid grid-cols-1 md:grid-cols-1 gap-4">
+    <div v-if="!loadingData" class="grid grid-cols-1 md:grid-cols-1 gap-4">
         <div v-if="notFound.value">
             <h1 class="text-2xl font-bold text-center">Ha ocurrido un error</h1>
             <p class="text-center">{{ notFound.msg }}</p>
@@ -122,7 +118,7 @@ onMounted(async () => {
             loadingData.value = false;
             return
         }
-        else{
+        else {
             notFound.value.value = true;
             notFound.value.msg = "Ocurrió un error al cargar la información del repositorio.";
         }

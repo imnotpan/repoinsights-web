@@ -1,5 +1,5 @@
 <template>
-    <div class="w-5/6 m-auto">
+    <div class="container mx-auto px-4 max-w-4xl md:px-0">
         <img src="@/assets/images/metabase/logo.svg" class="m-auto my-5" width="80" />
         <div class="relative">
             <div className="text-center w-3/4 m-auto">
@@ -27,9 +27,9 @@
                             iconPosition="right" text="Ir a Metabase" btnClass="btn-primary py-2 normal-case" />
                     </a>
                 </Card>
-                <span>
-                    <a href="https://www.metabase.com/docs/latest/" class="hover:underline hover:text-slate-600 py-2"
-                        target="_blank" rel="noopener noreferrer">Documentación</a>
+                <span class="mt-8">
+                    <a href="https://www.metabase.com/docs/latest/" class="hover:underline hover:text-slate-600"
+                        target="_blank" rel="noopener noreferrer">Ir a la documentación</a>
                     </span>
                 </div>
             </div>
