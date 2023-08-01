@@ -104,6 +104,10 @@ export const useExploreStore = defineStore({
         async getFilters(params) {
             this.loading.filters = true;
             const { data } = await axiosClient.get("/api/repoinsights/filters/", { params });
+            data.langs.data.sort((a, b) => {
+                return a.name.localeCompare(b.name);
+            });
+            
             this.projectFilters = data;
             this.loading.filters = false;
         },

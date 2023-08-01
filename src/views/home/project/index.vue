@@ -1,109 +1,101 @@
 <template>
-    <div class="grid grid-cols-12 gap-4">
-        <Card className="col-span-6">
-            <div class="flex flex-row justify-between">
-                <div class="mb-6">
-                    <p class="text-lg font-semibold text-slate-900 dark:text-white">Agrega tu repositorio privado</p>
-                    <p class="text-base">Repositorios de {{ username }}</p>
+    <div class="container mx-auto px-4 max-w-screen-xl md:px-0">
+        <div class="grid grid-cols-12 gap-4">
+            <Card className="col-span-6">
+                <div class="flex flex-row justify-between">
+                    <div class="mb-6">
+                        <p class="text-lg font-semibold text-slate-900 dark:text-white">Agrega tu repositorio privado</p>
+                        <p class="text-base">Repositorios de {{ username }}</p>
+                    </div>
+                    <div v-if="not_private_access">
+                        <ButtonWithHelp text="Repositorios privados" :link="private_route"
+                            msg="Debes solicitar acceso a tu repositorio privado para poder extraer la información" />
+                    </div>
                 </div>
-                <div
-                    v-if="not_private_access"
-                >
-                    <ButtonWithHelp
-                        text="Repositorios privados"
-                        :link="private_route"
-                        msg="Debes solicitar acceso a tu repositorio privado para poder extraer la información"
-                    />
-                </div>
-            </div>
-            <div class="min-h-[300px]">
-                <div v-if="repositories.length === 0">
-                    <Skeleton :number=5 />
-                </div>
+                <div class="min-h-[300px]">
+                    <div v-if="repositories.length === 0">
+                        <Skeleton :number=5 />
+                    </div>
 
-                <template v-else v-for="repo in repositories" :key="repo.id" @click="selectRepo(repo)">
-                    <div class="flex justify-between my-3 pb-3 border-b">
-                        <div class="flex trunc gap-4">
-                            <div>
-                                <h4 class="text-sm capitalize"> {{ repo.name }}</h4>
-                                <p class="text-xs" :class="{ 'show': repo.description, 'invisible': !repo.description }">
-                                    {{ repo.description || 'Sin descripción' }}
-                                </p>
+                    <template v-else v-for="repo in repositories" :key="repo.id" @click="selectRepo(repo)">
+                        <div class="flex justify-between my-3 pb-3 border-b">
+                            <div class="flex trunc gap-4">
+                                <div>
+                                    <h4 class="text-sm capitalize"> {{ repo.name }}</h4>
+                                    <p class="text-xs"
+                                        :class="{ 'show': repo.description, 'invisible': !repo.description }">
+                                        {{ repo.description || 'Sin descripción' }}
+                                    </p>
+                                </div>
+                            </div>
+                            <div @click="selectRepo(repo)" class="cursor-pointer">
+                                <Badge v-if="repo.added" label="Eliminar" badgeClass="bg-red-400 text-white !font-normal" />
+                                <Badge v-else-if="!repo.added" label="Agregar"
+                                    badgeClass="border border-primary-500 text-primary-500 !font-normal hover:bg-primary-100 !rounded-sm" />
                             </div>
                         </div>
-                        <div @click="selectRepo(repo)" class="cursor-pointer">
-                            <Badge v-if="repo.added" label="Eliminar"
-                                badgeClass="bg-red-400 text-white !font-normal" />
-                            <Badge v-else-if="!repo.added" label="Agregar"
-                                badgeClass="border border-primary-500 text-primary-500 !font-normal hover:bg-primary-100 !rounded-sm" />
-                        </div>
+                    </template>
+                </div>
+                <Pagination :pagination="pagination" @changePage=changePage />
+
+            </Card>
+            <Card className="col-span-6 relative !h-fit">
+                <div class="mb-6">
+                    <p class="text-lg font-semibold text-slate-900 dark:text-white">Tokens de acceso</p>
+                    <p class="text-base">Tokens disponibles para extraer la información de tu repositorio</p>
+                </div>
+                <div v-if="tokens.length > 0">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50 dark:bg-gray-800">
+                            <tr>
+                                <th class="text-left">Token</th>
+                                <th class="text-left">Creación</th>
+                                <th class="text-left">Tipo</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                            <tr v-for="token in tokens" :key="token.id">
+                                <td class="text-left font-semibold">{{ token.value }}</td>
+                                <td class="text-left">{{ toLocalDate(token.created_at) }}</td>
+                                <td class="text-left">{{ token.type }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-center mt-10">
+                        <button class="btn-outline-primary px-2 py-1 rounded-sm text-sm"
+                            @click="toggleModal">Agregar</button>
                     </div>
-                </template>
-            </div>
-            <Pagination :pagination="pagination" @changePage=changePage />
-
-        </Card>
-        <Card className="col-span-6 relative !h-fit">
-            <div class="mb-6">
-                <p class="text-lg font-semibold text-slate-900 dark:text-white">Tokens de acceso</p>
-                <p class="text-base">Tokens disponibles para extraer la información de tu repositorio</p>
-            </div>
-            <div v-if="tokens.length > 0">
-                <table class="w-full text-sm">
-                    <thead class="bg-gray-50 dark:bg-gray-800">
-                        <tr>
-                            <th class="text-left">Token</th>
-                            <th class="text-left">Creación</th>
-                            <th class="text-left">Tipo</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-                        <tr v-for="token in tokens" :key="token.id">
-                            <td class="text-left font-semibold">{{ token.value }}</td>
-                            <td class="text-left">{{ toLocalDate(token.created_at) }}</td>
-                            <td class="text-left">{{ token.type }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="text-center mt-10">
-                    <button class="btn-outline-primary px-2 py-1 rounded-sm text-sm" @click="toggleModal">Agregar</button>
                 </div>
-            </div>
-        </Card>
+            </Card>
 
-        <Modal title="Token personal de GitHub" :activeModal="show" @close="show = false">
-            <p>No sabes como obtenerlo? <span><a
-                        href="https://docs.github.com/es/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token"
-                        target="_blank">Instrucciones</a></span></p>
-            <form @submit.prevent="onSubmit" class="space-y-4 mt-4">
-                <Textinput type="text" placeholder="Ingresa tu token de acceso" name="token" v-model="token"
-                    :error="tokenError" :msgTooltip=true />
-                <div class="text-right mt-2">
-                    <Button text="Agregar" btnClass="btn-dark "></Button>
-                </div>
-            </form>
-        </Modal>
+            <Modal title="Token personal de GitHub" :activeModal="show" @close="show = false">
+                <p>No sabes como obtenerlo? <span><a
+                            href="https://docs.github.com/es/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token"
+                            target="_blank">Instrucciones</a></span></p>
+                <form @submit.prevent="onSubmit" class="space-y-4 mt-4">
+                    <Textinput type="text" placeholder="Ingresa tu token de acceso" name="token" v-model="token"
+                        :error="tokenError" :msgTooltip=true />
+                    <div class="text-right mt-2">
+                        <Button text="Agregar" btnClass="btn-dark "></Button>
+                    </div>
+                </form>
+            </Modal>
 
-        <WarningModal 
-            v-model="projectModal" 
-            @validate="submitProject"
-            title="¿Estas seguro de agregar el repositorio?"
-            btnText="Si, deseo extraer la información de mi repositoio">
-                <p class="mb-2">Al aceptar se extraerá la información de tu repositorio y se creará un proyecto en la plataforma. Si tu
+            <WarningModal v-model="projectModal" @validate="submitProject" title="¿Estas seguro de agregar el repositorio?"
+                btnText="Si, deseo extraer la información de mi repositoio">
+                <p class="mb-2">Al aceptar se extraerá la información de tu repositorio y se creará un proyecto en la
+                    plataforma. Si tu
                     proyecto es privado, <span class="font-semibold">tu información no será mostrada a los demás
                         usuarios.</span></p>
-                <p class="mb-2">Para aceptar escribe <span class="font-bold">{{ confirmationText }}</span> en el campo de abajo. </p>
-                <input 
-                    type="text" 
+                <p class="mb-2">Para aceptar escribe <span class="font-bold">{{ confirmationText }}</span> en el campo de
+                    abajo. </p>
+                <input type="text"
                     class="w-full py-2 px-1 rounded border border-gray-300 focus:border-primary-500 focus:ring-0"
-                    :class="{ '!border-red-500': validationError }"
-                    placeholder="Nombre del proyecto" 
-                    v-model="confirmAddProject" 
-                    @keyup.enter="submitProject"
-                    @input="validationError = false"
-                />
+                    :class="{ '!border-red-500': validationError }" placeholder="Nombre del proyecto"
+                    v-model="confirmAddProject" @keyup.enter="submitProject" @input="validationError = false" />
                 <small v-if="validationError" class="text-red-500 active:!border-red-500">Vuelve a intenrarlo</small>
-        </WarningModal>
+            </WarningModal>
+        </div>
     </div>
 </template>
 
@@ -177,10 +169,10 @@ const submitProject = () => {
             confirmAddProject.value = ""
         })
     }
-    else{
+    else {
         toast.error("Texto de confirmación incorrecto")
         validationError.value = true
-        
+
     }
 }
 
