@@ -8,4 +8,4 @@ RUN npm ci
 COPY . .
 
 # Comando para iniciar la aplicación
-CMD ["npm", "run", "serve"]
+CMD ["npm", "run", "dev"]

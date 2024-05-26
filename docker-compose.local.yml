@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  repoinsight_frontend:
+    container_name: repoinsight_frontend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./src:/app/src
+    env_file:
+      - .env
+    networks:
+      - repoinsight_network
+
+networks:
+  repoinsight_network:
+    external: true
