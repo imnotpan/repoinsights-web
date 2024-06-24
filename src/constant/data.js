@@ -33,4 +33,9 @@ export const menuItems = [
     icon: "heroicons-outline:sparkles",
     link: "contribuir",
   },
+  {
+    title: "Generar consulta",
+    icon: "heroicons-outline:chat-bubble-left-ellipsis",
+    link: "Generar consulta",
+  },
 ];

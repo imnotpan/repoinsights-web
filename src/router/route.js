@@ -82,6 +82,11 @@ const routes = [
         path: "contribuir",
         name: "contribuir",
         component: () => import("@/views/contribute/index.vue"),
+      },
+      {
+        path: "generate-query",
+        name: "Generar consulta",
+        component: () => import("@/views/query/index.vue"),
       }
     ],
   },
